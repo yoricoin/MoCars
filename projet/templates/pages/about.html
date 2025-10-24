@@ -1,0 +1,695 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>À Propos - MoCars</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/pages/about.css' %}">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="about-hero-content">
+            <h1>Notre Histoire</h1>
+            <p>Découvrez l'engagement et la passion qui animent MoCars depuis nos débuts</p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <div class="about-container">
+        <!-- Story Section -->
+        <section class="about-story">
+            <div class="story-content">
+                <h2>Notre parcours</h2>
+                <p>Fondée en "2025", MoCars est née d'une passion commune pour l'automobile et d'une vision : révolutionnir l'expérience d'achat et de vente de véhicules. Ce qui a commencé comme un petit showroom familial est rapidement devenu une référence dans le secteur automobile.</p>
+                <p>Notre engagement envers la qualité, la transparence et le service client nous a permis de nous développer continuellement, pour aujourd'hui compter plus de 10 000 véhicules vendus et des milliers de clients satisfaits à travers la France.</p>
+                <p>Chez MoCars, nous croyons que l'achat d'une voiture devrait être une expérience agréable, transparente et sécurisée. C'est cette philosophie qui guide chacune de nos actions depuis le premier jour.</p>
+            </div>
+            <div class="story-image">
+                Image de notre showroom
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="values-section">
+            <h2 class="section-title">Nos valeurs</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Transparence</h3>
+                    <p>Chaque véhicule est minutieusement inspecté et présenté avec un historique complet. Aucune surprise, seulement des véhicules dignes de confiance.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Service client</h3>
+                    <p>Notre équipe dévouée est là pour vous accompagner à chaque étape, de la recherche du véhicule idéal à l'après-vente.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Excellence</h3>
+                    <p>Nous nous engageons à proposer uniquement des véhicules de qualité, soigneusement sélectionnés pour leur état et leur histoire.</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Confiance</h3>
+                    <p>Nous construisons des relations durables avec nos clients basées sur l'honnêteté, le respect et l'intégrité.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>10 000+</h3>
+                    <p>Véhicules vendus</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>13+</h3>
+                    <p>Années d'expérience</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>Clients satisfaits</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>500+</h3>
+                    <p>Véhicules en stock</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission & Vision -->
+        <section class="mission-vision">
+            <div class="mission-card">
+                <h2>Notre mission</h2>
+                <p>Chez MoCars, notre mission est de simplifier et d'améliorer l'expérience d'achat et de vente de véhicules. Nous nous engageons à offrir un service personnalisé, des véhicules de qualité et une transaction transparente.</p>
+                <p>Nous voulons que chaque client reparte avec le véhicule qui correspond parfaitement à ses besoins et à son budget, en toute sérénité.</p>
+            </div>
+            
+            <div class="vision-card">
+                <h2>Notre vision</h2>
+                <p>Nous aspirons à devenir la référence incontournable dans le domaine de l'automobile, en continuant à innover pour offrir une expérience client exceptionnelle.</p>
+                <p>Notre objectif est d'élargir notre présence à l'international tout en maintenant les valeurs fondamentales qui ont fait notre succès.</p>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="team-section">
+            <h2 class="section-title">Notre équipe</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        Photo du fondateur
+                    </div>
+                    <div class="member-info">
+                        <h3>Thomas Martin</h3>
+                        <p class="member-role">Fondateur & PDG</p>
+                        <p>Passionné d'automobile depuis toujours, Thomas a créé MoCars avec la vision de transformer l'expérience d'achat automobile.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        Photo de la responsable commerciale
+                    </div>
+                    <div class="member-info">
+                        <h3>Sophie Leroy</h3>
+                        <p class="member-role">Responsable Commercial</p>
+                        <p>Sophie veille à ce que chaque client trouve le véhicule qui correspond parfaitement à ses attentes et à son budget.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        Photo du responsable technique
+                    </div>
+                    <div class="member-info">
+                        <h3>Marc Dubois</h3>
+                        <p class="member-role">Responsable Technique</p>
+                        <p>Marc et son équipe s'assurent que chaque véhicule répond à nos standards de qualité exigeants avant sa mise en vente.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-member">
+                    <div class="member-image">
+                        Photo de la responsable service client
+                    </div>
+                    <div class="member-info">
+                        <h3>Émilie Petit</h3>
+                        <p class="member-role">Responsable Service Client</p>
+                        <p>Émilie et son équipe sont dédiées à offrir une expérience exceptionnelle à chaque interaction avec nos clients.</p>
+                        <div class="member-social">
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Prêt à trouver votre véhicule idéal ?</h2>
+                <p>Rejoignez la communauté MoCars et découvrez pourquoi des milliers de clients nous font confiance</p>
+                <div class="cta-buttons">
+                    <!-- MODIFICATION : Utilisation des nouvelles classes de boutons -->
+                    <a href="/vehicules" class="cta-btn cta-btn-primary">
+                        <i class="fas fa-car"></i>
+                        Voir nos véhicules
+                    </a>
+                    <a href="/contact" class="cta-btn cta-btn-outline">
+                        <i class="fas fa-phone"></i>
+                        Nous contacter
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const valueCards = document.querySelectorAll('.value-card');
+            const teamMembers = document.querySelectorAll('.team-member');
+            
+            valueCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+                card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+            });
+            
+            teamMembers.forEach((member, index) => {
+                member.style.animationDelay = `${index * 0.2}s`;
+                member.style.animation = 'fadeInUp 0.6s ease-out forwards';
+            });
+            
+            // Stats counter animation
+            const statItems = document.querySelectorAll('.stat-item h3');
+            const statsSection = document.querySelector('.stats-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        statItems.forEach(stat => {
+                            const target = parseInt(stat.textContent);
+                            let current = 0;
+                            const increment = Math.ceil(target / 50);
+                            
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= target) {
+                                    stat.textContent = target + '+';
+                                    clearInterval(timer);
+                                } else {
+                                    stat.textContent = current + '+';
+                                }
+                            }, 30);
+                        });
+                        
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(statsSection);
+        });
+    </script>
+</body>
+<style>
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0F2C59;
+            --gold: #D4AF37;
+            --light-gray: #F5F5F5;
+            --text-dark: #333;
+            --burgundy: #8A1538;
+            --white: #ffffff;
+            --gray-medium: #666666;
+            --gray-light: #e1e1e1;
+            --navy-light: #1a4084;
+            --gold-dark: #b8941f;
+        }
+
+        .about-hero {
+            background: linear-gradient(rgba(15, 44, 89, 0.85), rgba(15, 44, 89, 0.85)), 
+                        url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 6rem 2rem;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+        }
+
+        .about-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .about-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .about-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .about-story {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 5rem;
+        }
+
+        .story-content {
+            padding-right: 2rem;
+        }
+
+        .story-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .story-content p {
+            line-height: 1.7;
+            color: var(--gray-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .story-image {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            height: 400px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        .values-section {
+            margin-bottom: 5rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--navy);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .value-card h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .value-card p {
+            color: var(--gray-medium);
+            line-height: 1.6;
+        }
+
+        .stats-section {
+            background: linear-gradient(135deg, var(--navy), var(--navy-light));
+            color: var(--white);
+            padding: 4rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gold);
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .team-section {
+            margin-bottom: 5rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .member-image {
+            height: 250px;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+
+        .member-info {
+            padding: 1.5rem;
+        }
+
+        .member-info h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .member-role {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .member-info p {
+            color: var(--gray-medium);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--navy);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--navy);
+            color: var(--white);
+        }
+
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-bottom: 5rem;
+        }
+
+        .mission-card, .vision-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .mission-card h2, .vision-card h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        .mission-card h2::after, .vision-card h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--gold);
+        }
+
+        .mission-card p, .vision-card p {
+            line-height: 1.7;
+            color: var(--gray-medium);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--navy), var(--navy-light));
+            color: var(--white);
+            padding: 5rem 2rem;
+            text-align: center;
+            border-radius: 15px;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* CHANGEMENTS CRITIQUES : Renommage des classes de boutons pour éviter les conflits */
+        .cta-btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cta-btn-primary {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .cta-btn-primary:hover {
+            background: var(--gold-dark);
+            transform: translateY(-3px);
+        }
+
+        .cta-btn-outline {
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .cta-btn-outline:hover {
+            background: var(--white);
+            color: var(--navy);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .about-hero {
+                padding: 4rem 1.5rem;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .about-container {
+                padding: 3rem 1.5rem;
+            }
+            
+            .about-story {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .story-content {
+                padding-right: 0;
+            }
+            
+            .story-image {
+                height: 300px;
+                order: -1;
+            }
+            
+            .mission-vision {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .about-hero {
+                padding: 3rem 1rem;
+            }
+            
+            .about-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .about-container {
+                padding: 2rem 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+</style>
+</html>
+
+{% endblock %}

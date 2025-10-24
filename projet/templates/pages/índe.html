@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ annonce.titre }} - Elite Auto</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%);
+            color: #333333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header de l'annonce */
+        .annonce-header {
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px 15px 0 0;
+            margin-bottom: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .annonce-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .annonce-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .annonce-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .price-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #D4AF37 0%, #b8941f 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .status-approuve { background: #4CAF50; color: white; }
+        .status-en_attente { background: #FF9800; color: white; }
+        .status-rejete { background: #f44336; color: white; }
+        .status-vendu { background: #9E9E9E; color: white; }
+
+        /* Section principale */
+        .main-content {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 10px 30px rgba(15, 44, 89, 0.1);
+            overflow: hidden;
+        }
+
+        /* Galerie d'images */
+        .image-gallery {
+            position: relative;
+            height: 400px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            color: #666;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .image-counter {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(15, 44, 89, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Informations détaillées */
+        .details-section {
+            padding: 2rem;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #D4AF37;
+        }
+
+        .detail-title {
+            color: #0F2C59;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-title::before {
+            content: '●';
+            color: #D4AF37;
+        }
+
+        .detail-list {
+            list-style: none;
+        }
+
+        .detail-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(15, 44, 89, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .highlight-value {
+            color: #8A1538;
+            font-weight: bold;
+        }
+
+        /* Description */
+        .description-section {
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            color: white;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+        }
+
+        .description-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #D4AF37;
+        }
+
+        .description-text {
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Section contact */
+        .contact-section {
+            background: linear-gradient(135deg, #8A1538 0%, #a01842 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .contact-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .seller-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .seller-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #D4AF37 0%, #b8941f 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Tags et badges */
+        .tags-section {
+            padding: 1rem 2rem;
+            background: #f8f9fa;
+        }
+
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+
+        .tag.special {
+            background: linear-gradient(135deg, #D4AF37 0%, #b8941f 100%);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .annonce-title {
+                font-size: 1.8rem;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .contact-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Animations */
+        .detail-card {
+            transition: all 0.3s ease;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(15, 44, 89, 0.15);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header de l'annonce -->
+        <div class="annonce-header fade-in">
+            <div class="status-badge status-{{ annonce.statut }}">
+                {{ annonce.get_statut_display }}
+            </div>
+            <div class="header-content">
+                <h1 class="annonce-title">{{ annonce.titre }}</h1>
+                <p class="annonce-subtitle">{{ annonce.marque }} {{ annonce.modele }} - {{ annonce.annee }}</p>
+                <div class="price-badge">{{ annonce.prix|floatformat:0 }} DH</div>
+            </div>
+        </div>
+
+        <div class="main-content fade-in">
+            <!-- Galerie d'images -->
+            <div class="image-gallery">
+                {% if annonce.images.exists %}
+                    <img src="{{ annonce.images.first.image.url }}" alt="{{ annonce.titre }}" class="main-image">
+                    <div class="image-counter">
+                        <span>📸</span> {{ annonce.images.count }} photo{{ annonce.images.count|pluralize }}
+                    </div>
+                {% else %}
+                    <div class="image-placeholder">
+                        <p>📷 Aucune image disponible</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Tags -->
+            <div class="tags-section">
+                {% if annonce.dedouaner %}
+                    <span class="tag special">✅ Dédouané</span>
+                {% else %}
+                    <span class="tag">⚠️ Non dédouané</span>
+                {% endif %}
+                <span class="tag">🚗 {{ annonce.carburant|capfirst }}</span>
+                <span class="tag">⚙️ {{ annonce.transmission|capfirst }}</span>
+                <span class="tag">📍 {{ annonce.localisation|default:"Localisation non spécifiée" }}</span>
+            </div>
+
+            <!-- Détails du véhicule -->
+            <div class="details-section">
+                <div class="details-grid">
+                    <!-- Caractéristiques principales -->
+                    <div class="detail-card">
+                        <h3 class="detail-title">Caractéristiques Principales</h3>
+                        <ul class="detail-list">
+                            <li class="detail-item">
+                                <span class="detail-label">Marque</span>
+                                <span class="detail-value">{{ annonce.marque }}</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Modèle</span>
+                                <span class="detail-value">{{ annonce.modele }}</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Année</span>
+                                <span class="detail-value">{{ annonce.annee }}</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Kilométrage</span>
+                                <span class="detail-value highlight-value">{{ annonce.kilometrage|floatformat:0 }} km</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Motorisation -->
+                    <div class="detail-card">
+                        <h3 class="detail-title">Motorisation & Transmission</h3>
+                        <ul class="detail-list">
+                            <li class="detail-item">
+                                <span class="detail-label">Carburant</span>
+                                <span class="detail-value">{{ annonce.get_carburant_display }}</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Transmission</span>
+                                <span class="detail-value">{{ annonce.get_transmission_display }}</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Informations fiscales -->
+                    <div class="detail-card">
+                        <h3 class="detail-title">Informations Fiscales</h3>
+                        <ul class="detail-list">
+                            <li class="detail-item">
+                                <span class="detail-label">Prix</span>
+                                <span class="detail-value highlight-value">{{ annonce.prix|floatformat:0 }} DH</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Vignette annuelle</span>
+                                <span class="detail-value">{{ annonce.vignette|floatformat:0 }} DH</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Statut douane</span>
+                                <span class="detail-value">
+                                    {% if annonce.dedouaner %}
+                                        <span style="color: #4CAF50;">✅ Dédouané</span>
+                                    {% else %}
+                                        <span style="color: #ff9800;">⚠️ Non dédouané</span>
+                                    {% endif %}
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Localisation et dates -->
+                    <div class="detail-card">
+                        <h3 class="detail-title">Localisation & Publication</h3>
+                        <ul class="detail-list">
+                            <li class="detail-item">
+                                <span class="detail-label">Ville</span>
+                                <span class="detail-value">{{ annonce.localisation|default:"Non spécifiée" }}</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Publié le</span>
+                                <span class="detail-value">{{ annonce.date_creation|date:"d M Y" }}</span>
+                            </li>
+                            <li class="detail-item">
+                                <span class="detail-label">Mis à jour</span>
+                                <span class="detail-value">{{ annonce.date_modification|date:"d M Y" }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section fade-in">
+            <h2 class="description-title">📋 Description du véhicule</h2>
+            <div class="description-text">
+                {{ annonce.description|linebreaks }}
+            </div>
+        </div>
+
+        <!-- Section contact -->
+        <div class="contact-section fade-in">
+            <h2 class="contact-title">💬 Contactez le vendeur</h2>
+            <div class="seller-info">
+                <div class="seller-name">👤 {{ annonce.utilisateur.get_full_name|default:annonce.utilisateur.username }}</div>
+                <p>Membre depuis {{ annonce.utilisateur.date_joined|date:"M Y" }}</p>
+            </div>
+            <div class="contact-buttons">
+                <a href="tel:+212" class="btn btn-primary">📞 Appeler</a>
+                <a href="#" class="btn btn-secondary">✉️ Envoyer un message</a>
+                <a href="#" class="btn btn-secondary">❤️ Ajouter aux favoris</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation au scroll
+        window.addEventListener('scroll', () => {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('fade-in');
+                }
+            });
+        });
+
+        // Simulation d'une galerie d'images (pour la démo)
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageGallery = document.querySelector('.image-gallery');
+            if (imageGallery) {
+                imageGallery.addEventListener('click', function() {
+                    alert('Galerie d\'images - Fonctionnalité à implémenter');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,956 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Annonces - Mocars</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F8FAFC;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        .page-header {
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            padding: 60px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-info h1 {
+            color: #FFFFFF;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header-info p {
+            color: #D4AF37;
+            font-size: 1.1rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #D4AF37;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: #FFFFFF;
+            padding: 25px 0;
+            box-shadow: 0 1px 10px rgba(15, 44, 89, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .action-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 5px;
+            background: #F1F5F9;
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #64748B;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-tab.active {
+            background: #0F2C59;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(15, 44, 89, 0.15);
+        }
+
+        .btn-nouvelle-annonce {
+            background: linear-gradient(135deg, #8A1538, #a01842);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(138, 21, 56, 0.2);
+        }
+
+        .btn-nouvelle-annonce:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(138, 21, 56, 0.3);
+        }
+
+        /* Mes Annonces Grid */
+        .mes-annonces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        /* Annonce Card Enhanced - Entièrement blanche */
+        .mon-annonce-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(15, 44, 89, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid #E2E8F0;
+            cursor: pointer;
+        }
+
+        .mon-annonce-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(15, 44, 89, 0.12);
+            border-color: #E2E8F0;
+        }
+
+        
+        .card-link {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+        }
+
+ .status-badge-main {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-approuve { background: linear-gradient(90deg, #10B981, #059669); }
+       .status-en_attente { 
+            background: rgba(255, 193, 7, 0.9); 
+            color: #000000; 
+        }
+        .status-rejete { background: linear-gradient(90deg, #EF4444, #DC2626); }
+        .status-vendu { background: linear-gradient(90deg, #6B7280, #4B5563); }
+
+        .card-header {
+            position: relative;
+            height: 260px;
+            overflow: hidden;
+        }
+
+        .card-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .mon-annonce-card:hover .card-header img {
+            transform: scale(1.05);
+        }
+
+        /* Badge de statut principal à gauche - Plus petit */
+        .status-badge-main {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 4;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .status-approuve { 
+            background: rgba(16, 185, 129, 0.95); 
+            color: #FFFFFF; 
+        }
+        .status-en_attente { 
+            background: rgba(255, 193, 7, 0.9); 
+            color: black; 
+        }
+        .status-rejete { 
+            background: rgba(239, 68, 68, 0.95); 
+            color: #FFFFFF; 
+        }
+        .status-vendu { 
+            background: rgba(107, 114, 128, 0.95); 
+            color: #FFFFFF; 
+        }
+
+        /* Actions à droite - design amélioré */
+       .action-badges {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 5;
+    opacity: 1; /* Toujours visible */
+    transform: translateX(0); /* Pas de translation */
+}
+
+
+     
+
+        .action-emoji-badge {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .edit-badge { 
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95));
+            color: #FFFFFF;
+        }
+
+        .delete-badge { 
+            background: linear-gradient(135deg, #6b0f2c, #800f35);
+
+            color: #FFFFFF;
+        }
+
+        .action-emoji-badge:hover {
+            transform: scale(1.1) rotate(3deg);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .edit-badge:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 1), rgba(37, 99, 235, 1));
+        }
+
+        .delete-badge:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 1), rgba(220, 38, 38, 1));
+        }
+
+        /* Tooltip amélioré */
+        .action-emoji-badge::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 50%;
+            right: calc(100% + 12px);
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #1F2937, #374151);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-emoji-badge::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: calc(100% + 4px);
+            transform: translateY(-50%);
+            border: 4px solid transparent;
+            border-left-color: #1F2937;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .action-emoji-badge:hover::before,
+        .action-emoji-badge:hover::after {
+            opacity: 1;
+        }
+
+        .card-body {
+            padding: 24px;
+            background: #FFFFFF;
+        }
+
+        .card-title {
+            color: #1E293B;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-subtitle {
+            color: #64748B;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-price {
+            color: #8A1538;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-details-enhanced {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .detail-item-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #64748B;
+            font-size: 0.875rem;
+            background: #F8FAFC;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .detail-item-enhanced i {
+            color: #D4AF37;
+            width: 16px;
+            font-size: 0.8rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #64748B;
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #CBD5E1;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: #1E293B;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        /* Liens des cartes */
+        .card-link {
+            display: block;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 40px 0 30px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-info h1 {
+                font-size: 2rem;
+            }
+
+            .header-stats {
+                gap: 20px;
+            }
+
+            .action-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-tabs {
+                justify-content: center;
+            }
+
+            .mes-annonces-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-badge-main {
+                padding: 5px 10px;
+                font-size: 0.7rem;
+            }
+
+            .action-emoji-badge {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        /* Modal de confirmation */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 15% auto;
+            padding: 32px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid #E2E8F0;
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            color: #1E293B;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+
+        .modal-header p {
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-cancel {
+            background: #F1F5F9;
+            color: #64748B;
+            border: 1px solid #E2E8F0;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #E2E8F0;
+            color: #475569;
+        }
+    /* Nouveau style pour les boutons d'action en bas de carte */
+        .card-footer-actions {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            justify-content: center;
+        }
+
+        .card-action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .card-action-btn.edit-btn {
+            background:  #0F2C59;
+            color: white;
+        }
+
+        .card-action-btn.delete-btn {
+            background: linear-gradient(135deg, #8A1538, #a01842);
+            color: white;
+        }
+
+        .card-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-action-btn.edit-btn:hover {
+            background:dark blue;
+        }
+
+        .card-action-btn.delete-btn:hover {
+           background: linear-gradient(135deg, #6b0f2c, #800f35);
+
+        }
+
+        /* Cacher les badges d'action en haut à droite */
+        .action-badges {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+   <!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Mes Annonces</h1>
+                <p>Gérez et suivez vos annonces en temps réel</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ annonces.count }}</span>
+                    <span class="stat-label">Annonces</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">342</span>
+                    <span class="stat-label">Vues totales</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">23</span>
+                    <span class="stat-label">Contacts</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Action Bar -->
+<section class="action-bar">
+    <div class="container">
+        <div class="action-content">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterAnnonces(this, 'all')">Toutes ({{ annonces.count }})</button>
+                <button class="filter-tab" onclick="filterAnnonces(this, 'approuve')">Approuvées</button>
+                <button class="filter-tab" onclick="filterAnnonces(this, 'en_attente')">En attente</button>
+                <button class="filter-tab" onclick="filterAnnonces(this, 'rejete')">Rejetées</button>
+            </div>
+
+            <a href="{% url 'ajouterannonce' %}" class="btn-nouvelle-annonce">
+                <i class="fas fa-plus"></i>
+                Nouvelle annonce
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+    <div class="mes-annonces-grid" id="mesAnnonces">
+        {% for annonce in annonces %}
+        <div class="mon-annonce-card fade-in status-{{ annonce.statut }}" data-status="{{ annonce.statut }}" data-id="{{ annonce.id }}">
+            
+            <a href="{% url 'detail_annonce' annonce.id %}" class="card-link">
+                <div class="card-header">
+                    {% if annonce.images.all %}
+                        <img src="{{ annonce.images.first.image.url }}" alt="{{ annonce.titre }}">
+                    {% else %}
+                        <img src="{% static 'default_car.png' %}" alt="Pas d'image">
+                    {% endif %}
+
+                    <div class="status-badge-main status-{{ annonce.statut }}">
+                        {% if annonce.statut == "approuve" %}
+                            <i class="fas fa-check-circle"></i> Approuvé
+                        {% elif annonce.statut == "en_attente" %}
+                            <i class="fas fa-clock"></i> En attente
+                        {% elif annonce.statut == "rejete" %}
+                            <i class="fas fa-times-circle"></i> Rejeté
+                        {% elif annonce.statut == "vendu" %}
+                            <i class="fas fa-handshake"></i> Vendu
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h3 class="card-title">{{ annonce.titre }}</h3>
+                    <div class="card-subtitle">
+                        <i class="fas fa-calendar-alt"></i>
+                        Publiée le {{ annonce.date_creation|date:"d M Y" }}
+                    </div>
+                    <div class="card-price">
+                        {{ annonce.prix }} Mad
+                    </div>
+                    <div class="card-details-enhanced">
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-calendar"></i>
+                            <span>{{ annonce.annee }}</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>{{ annonce.kilometrage }} km</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>{{ annonce.carburant }}</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-cog"></i>
+                            <span>{{ annonce.transmission }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Actions en bas de carte -->
+            <div class="card-footer-actions">
+                <button class="card-action-btn edit-btn" onclick="editAnnonce({{ annonce.id }}, event)">
+                    <i class="fas fa-edit"></i> Modifier
+                </button>
+                <button class="card-action-btn delete-btn" 
+        onclick="showDeleteModal('{{ annonce.titre|addslashes }}', {{annonce.id}})">
+    <i class="fas fa-trash"></i> Supprimer
+</button>
+
+            </div>
+
+           
+        </div>
+        {% empty %}
+        <div class="empty-state" id="emptyState" style="display: block;">
+            <i class="fas fa-car"></i>
+            <h3>Aucune annonce trouvée</h3>
+            <p>Vous n'avez pas encore d'annonces</p>
+            <a href="{% url 'ajouterannonce' %}" class="btn-nouvelle-annonce">
+                <i class="fas fa-plus"></i>
+                Créer ma première annonce
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3> Confirmer la suppression</h3>
+            <p>Êtes-vous sûr de vouloir supprimer cette annonce ?</p>
+            <strong id="annonceTitle"></strong>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-confirm" onclick="deleteAnnonce()">Supprimer</button>
+            <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+</div>
+<script>
+    let currentAnnonceToDelete = null;
+
+    // Afficher la modal et stocker l'annonce à supprimer
+    function showDeleteModal(titre, id) {
+        currentAnnonceToDelete = { titre: titre, id: id };
+        document.getElementById('annonceTitle').textContent = `"${titre}"`;
+        document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    // Fermer la modal
+    function closeModal() {
+        document.getElementById('deleteModal').style.display = 'none';
+        currentAnnonceToDelete = null;
+    }
+
+    // Fonction AJAX pour supprimer l'annonce
+    function deleteAnnonce() {
+        if (!currentAnnonceToDelete) return;
+
+        const { id, titre } = currentAnnonceToDelete;
+        const btn = document.querySelector('.btn-confirm');
+        btn.disabled = true;
+        btn.textContent = 'Suppression...';
+
+        // Utilisation de l'URL correcte avec le nom de route Django
+        fetch("{% url 'supprimer_annonce' 0 %}".replace('0', id), {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 403) {
+                throw new Error('Erreur d\'authentification');
+            } else if (response.status === 404) {
+                throw new Error('Annonce non trouvée');
+            } else {
+                throw new Error('Erreur serveur');
+            }
+        })
+        .then(data => {
+            if (data.success) {
+                closeModal();
+                // Supprimer la carte du DOM
+                const card = document.querySelector(`.mon-annonce-card[data-id="${id}"]`);
+                if (card) card.remove();
+                // Afficher un message de succès
+                showNotification(`"${titre}" supprimé avec succès !`, 'success');
+            } else {
+                throw new Error(data.message || 'Erreur lors de la suppression');
+            }
+        })
+        .catch(err => {
+            showNotification(err.message, 'error');
+            btn.disabled = false;
+            btn.textContent = 'Supprimer';
+        });
+    }
+
+    // Fonction pour récupérer le cookie CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Fonction pour afficher les notifications
+    function showNotification(message, type) {
+        // Créer une notification toast
+        const notification = document.createElement('div');
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.padding = '15px 20px';
+        notification.style.borderRadius = '5px';
+        notification.style.color = 'white';
+        notification.style.zIndex = '10000';
+        notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.3s';
+        
+        if (type === 'success') {
+            notification.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+        } else {
+            notification.style.background = 'linear-gradient(135deg, #EF4444, #DC2626)';
+        }
+        
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        // Animation d'apparition
+        setTimeout(() => {
+            notification.style.opacity = '1';
+        }, 10);
+        
+        // Disparaître après 5 secondes
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 300);
+        }, 5000);
+    }
+
+    // Fermer la modal en cliquant en dehors
+    window.onclick = function(event) {
+        const modal = document.getElementById('deleteModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+
+     function filterAnnonces(button, status) {
+        // Mettre à jour l'onglet actif
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        // Afficher ou masquer les annonces en fonction du statut
+        const annonces = document.querySelectorAll('.mon-annonce-card');
+        annonces.forEach(annonce => {
+            if (status === 'all') {
+                annonce.style.display = 'block';
+            } else {
+                if (annonce.getAttribute('data-status') === status) {
+                    annonce.style.display = 'block';
+                } else {
+                    annonce.style.display = 'none';
+                }
+            }
+        });
+
+        // Vérifier s'il n'y a aucune annonce à afficher
+        const visibleAnnonces = document.querySelectorAll('.mon-annonce-card[style="display: block"]');
+        const emptyState = document.getElementById('emptyState');
+        if (visibleAnnonces.length === 0) {
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
+    }
+    
+    function editAnnonce(annonceId, event) {
+    event.preventDefault(); // Évite le comportement par défaut
+    // Redirige vers la page d'édition avec l'ID
+    window.location.href = "{% url 'edit_annonce' 0 %}".replace('0', annonceId);
+    }
+        
+</script>
+</body>
+
+
+{% endblock %}

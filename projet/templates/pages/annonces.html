@@ -1,0 +1,617 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<head>
+    <title>Annonces Automobiles - Mocars</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F5F5F5;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            color: #FFFFFF;
+            padding: 60px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.05" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,138.7C960,139,1056,117,1152,106.7C1248,96,1344,96,1392,96L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: bottom;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 40px;
+        }
+
+        /* Search & Filter Bar */
+        .search-filter-bar {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-top: -50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-filter-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0F2C59;
+        }
+
+        .filter-input, .filter-select {
+            padding: 12px 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .filter-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .btn-search {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #D4AF37, #b8941f);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 40px 0;
+            background: #FFFFFF;
+            margin: 30px 0;
+            border-radius: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0F2C59;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666666;
+            font-size: 0.95rem;
+        }
+
+        /* Annonces Section */
+        .annonces-section {
+            padding: 40px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0F2C59;
+        }
+
+        .sort-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sort-dropdown select {
+            padding: 10px 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        /* Annonces Grid */
+        .annonces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .annonce-card {
+            background: #FFFFFF;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .annonce-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(15, 44, 89, 0.15);
+        }
+
+        .card-image {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .annonce-card:hover .card-image img {
+            transform: scale(1.1);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(40, 167, 69, 0.95);
+            color: #FFFFFF;
+            backdrop-filter: blur(10px);
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            color: #666666;
+        }
+
+        .favorite-btn:hover {
+            background: #FFFFFF;
+            color: #dc3545;
+            transform: scale(1.1);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0F2C59;
+            margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-specs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .card-spec {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #8A1538;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #F0F0F0;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .seller-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .seller-name {
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        .card-location {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666666;
+            font-size: 0.85rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 40px 0;
+        }
+
+        .pagination-btn {
+            padding: 10px 18px;
+            border: 2px solid #E0E0E0;
+            background: #FFFFFF;
+            color: #666666;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .pagination-btn:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+            border-color: transparent;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666666;
+        }
+
+        .no-results i {
+            font-size: 5rem;
+            color: #E0E0E0;
+            margin-bottom: 20px;
+        }
+
+        .no-results h3 {
+            font-size: 1.8rem;
+            color: #0F2C59;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .search-filter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .search-filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .annonces-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Trouvez Votre Voiture Idéale</h1>
+            <p class="hero-subtitle">Des milliers d'annonces vérifiées de véhicules d'occasion</p>
+        </div>
+    </div>
+</section>
+
+<!-- Search & Filter Bar -->
+<div class="container">
+    <div class="search-filter-bar fade-in">
+        <form method="GET" action="">
+            <div class="search-filter-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Rechercher</label>
+                    <input type="text" name="q" class="filter-input" placeholder="Marque, modèle..." value="{{ request.GET.q }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Marque</label>
+                    <select name="marque" class="filter-select">
+                        <option value="">Toutes les marques</option>
+                        {% for marque in marques %}
+                            <option value="{{ marque }}" {% if request.GET.marque == marque %}selected{% endif %}>{{ marque }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Prix max</label>
+                    <input type="number" name="prix_max" class="filter-input" placeholder="Prix maximum" value="{{ request.GET.prix_max }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Année min</label>
+                    <input type="number" name="annee_min" class="filter-input" placeholder="2015" value="{{ request.GET.annee_min }}">
+                </div>
+                
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Annonces Section -->
+<div class="container">
+    <section class="annonces-section">
+        <div class="section-header">
+            <h2 class="section-title">Annonces Récentes ({{ annonces.count }})</h2>
+            <div class="sort-dropdown">
+                <label>Trier par:</label>
+                <select onchange="window.location.href=this.value">
+                    {% comment %}Construire URL avec tous les filtres{% endcomment %}
+                    <option value="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.marque %}marque={{ request.GET.marque }}&{% endif %}{% if request.GET.prix_max %}prix_max={{ request.GET.prix_max }}&{% endif %}{% if request.GET.annee_min %}annee_min={{ request.GET.annee_min }}&{% endif %}sort=recent" {% if request.GET.sort == 'recent' or not request.GET.sort %}selected{% endif %}>Plus récentes</option>
+                    <option value="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.marque %}marque={{ request.GET.marque }}&{% endif %}{% if request.GET.prix_max %}prix_max={{ request.GET.prix_max }}&{% endif %}{% if request.GET.annee_min %}annee_min={{ request.GET.annee_min }}&{% endif %}sort=prix_asc" {% if request.GET.sort == 'prix_asc' %}selected{% endif %}>Prix croissant</option>
+                    <option value="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.marque %}marque={{ request.GET.marque }}&{% endif %}{% if request.GET.prix_max %}prix_max={{ request.GET.prix_max }}&{% endif %}{% if request.GET.annee_min %}annee_min={{ request.GET.annee_min }}&{% endif %}sort=prix_desc" {% if request.GET.sort == 'prix_desc' %}selected{% endif %}>Prix décroissant</option>
+                    <option value="?{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}{% if request.GET.marque %}marque={{ request.GET.marque }}&{% endif %}{% if request.GET.prix_max %}prix_max={{ request.GET.prix_max }}&{% endif %}{% if request.GET.annee_min %}annee_min={{ request.GET.annee_min }}&{% endif %}sort=km_asc" {% if request.GET.sort == 'km_asc' %}selected{% endif %}>Kilométrage croissant</option>
+                </select>
+            </div>
+        </div>
+
+        {% if annonces %}
+            <div class="annonces-grid">
+                {% for annonce in annonces %}
+                    <div class="annonce-card fade-in" onclick="window.location.href='{% url 'detail_annonce' annonce.id %}'">
+                        <div class="card-image">
+                            {% if annonce.images.first %}
+                                <img src="{{ annonce.images.first.image.url }}" alt="{{ annonce.titre }}">
+                            {% else %}
+                                <img src="{% static 'images/default_car.png' %}" alt="Pas d'image">
+                            {% endif %}
+                            <div class="status-badge"><i class="fas fa-check-circle"></i> Approuvé</div>
+                            <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite({{ annonce.id }})">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="card-content">
+                            <h3 class="card-title">{{ annonce.titre }}</h3>
+                            <div class="card-specs">
+                                <span class="card-spec"><i class="fas fa-calendar"></i> {{ annonce.annee }}</span>
+                                <span class="card-spec"><i class="fas fa-tachometer-alt"></i> {{ annonce.kilometrage|floatformat:0 }} km</span>
+                                <span class="card-spec"><i class="fas fa-gas-pump"></i> {{ annonce.get_carburant_display }}</span>
+                            </div>
+                            <div class="card-price">{{ annonce.prix|floatformat:0 }} MAD</div>
+                            <div class="card-footer">
+                                <div class="seller-info">
+                                    <div class="seller-avatar">
+                                        {{ annonce.utilisateur.first_name|first|default:annonce.utilisateur.username|first|upper }}
+                                    </div>
+                                    <span class="seller-name">
+                                        {{ annonce.utilisateur.first_name|default:annonce.utilisateur.username }}
+                                    </span>
+                                </div>
+                                {% if annonce.localisation %}
+                                    <div class="card-location"><i class="fas fa-map-marker-alt"></i> {{ annonce.localisation }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <div class="pagination">
+                    {% for num in page_obj.paginator.page_range %}
+                        {% with query_params=request.GET.urlencode %}
+                            {% if page_obj.number == num %}
+                                <button class="pagination-btn active">{{ num }}</button>
+                            {% else %}
+                                <button class="pagination-btn" onclick="window.location.href='?page={{ num }}&{{ query_params }}'">{{ num }}</button>
+                            {% endif %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        {% else %}
+            <div class="no-results">
+                <i class="fas fa-search"></i>
+                <h3>Aucune annonce trouvée</h3>
+                <p>Essayez de modifier vos critères de recherche</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+function toggleFavorite(annonceId) {
+    const button = event.currentTarget;
+    const icon = button.querySelector('i');
+    if (icon.classList.contains('far')) {
+        icon.classList.replace('far', 'fas');
+        button.style.color = '#dc3545';
+        showNotification('Ajouté aux favoris', 'success');
+    } else {
+        icon.classList.replace('fas', 'far');
+        button.style.color = '#666';
+        showNotification('Retiré des favoris', 'info');
+    }
+    // TODO: envoyer la requête AJAX pour sauvegarder côté backend
+}
+
+function showNotification(message, type) {
+    const notif = document.createElement('div');
+    notif.style.cssText = `
+        position: fixed; top: 20px; right: 20px;
+        background: ${type === 'success' ? '#28a745' : '#17a2b8'};
+        color: white; padding: 15px 20px; border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    notif.textContent = message;
+    document.body.appendChild(notif);
+    setTimeout(() => {
+        notif.style.animation = 'slideOut 0.3s ease-in forwards';
+        setTimeout(() => notif.remove(), 300);
+    }, 3000);
+}
+</script>
+</body>
+
+{% endblock %}

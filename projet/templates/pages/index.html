@@ -1,0 +1,1394 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Annonces - Elite Auto</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F5F5F5;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        .page-header {
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            padding: 60px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-info h1 {
+            color: #FFFFFF;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header-info p {
+            color: #D4AF37;
+            font-size: 1.1rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #D4AF37;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: #FFFFFF;
+            padding: 25px 0;
+            box-shadow: 0 2px 20px rgba(15, 44, 89, 0.08);
+            margin-bottom: 40px;
+        }
+
+        .action-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 5px;
+            background: #F5F5F5;
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #666666;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-tab.active {
+            background: #0F2C59;
+            color: #FFFFFF;
+            box-shadow: 0 2px 10px rgba(15, 44, 89, 0.2);
+        }
+
+        .btn-nouvelle-annonce {
+            background: linear-gradient(135deg, #8A1538, #a01842);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(138, 21, 56, 0.2);
+        }
+
+        .btn-nouvelle-annonce:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(138, 21, 56, 0.3);
+        }
+
+        /* Mes Annonces Grid */
+        .mes-annonces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Annonce Card Enhanced */
+        .mon-annonce-card {
+            background: #FFFFFF;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(15, 44, 89, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .mon-annonce-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(15, 44, 89, 0.15);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .card-status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            z-index: 3;
+        }
+
+        .status-active { background: linear-gradient(90deg, #28a745, #20c997); }
+        .status-pending { background: linear-gradient(90deg, #ffc107, #fd7e14); }
+        .status-expired { background: linear-gradient(90deg, #dc3545, #c82333); }
+        .status-sold { background: linear-gradient(90deg, #6c757d, #495057); }
+
+        .card-header {
+            position: relative;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .card-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .mon-annonce-card:hover .card-header img {
+            transform: scale(1.08);
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .badge-active { 
+            background: rgba(40, 167, 69, 0.9); 
+            color: #FFFFFF; 
+        }
+        .badge-pending { 
+            background: rgba(255, 193, 7, 0.9); 
+            color: #000000; 
+        }
+        .badge-expired { 
+            background: rgba(220, 53, 69, 0.9); 
+            color: #FFFFFF; 
+        }
+        .badge-sold { 
+            background: rgba(108, 117, 125, 0.9); 
+            color: #FFFFFF; 
+        }
+
+        .premium-badge {
+            background: linear-gradient(135deg, #D4AF37, #b8941f);
+            color: #FFFFFF;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-actions-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+        }
+
+        .mon-annonce-card:hover .card-actions-overlay {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .quick-action {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-edit {
+            background: rgba(13, 110, 253, 0.9);
+            color: #FFFFFF;
+        }
+
+        .action-promote {
+            background: rgba(212, 175, 55, 0.9);
+            color: #FFFFFF;
+        }
+
+        .action-delete {
+            background: rgba(220, 53, 69, 0.9);
+            color: #FFFFFF;
+        }
+
+        .quick-action:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-body {
+            padding: 25px;
+        }
+
+        .card-title {
+            color: #0F2C59;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-subtitle {
+            color: #666666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-price {
+            color: #8A1538;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price-change {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .price-up { color: #28a745; }
+        .price-down { color: #dc3545; }
+
+        .card-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(245, 245, 245, 0.7);
+            border-radius: 12px;
+        }
+
+        .stat-item-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .stat-icon.views { background: rgba(13, 110, 253, 0.1); color: #0d6efd; }
+        .stat-icon.contacts { background: rgba(40, 167, 69, 0.1); color: #28a745; }
+        .stat-icon.favorites { background: rgba(220, 53, 69, 0.1); color: #dc3545; }
+        .stat-icon.days { background: rgba(255, 193, 7, 0.1); color: #ffc107; }
+
+        .stat-info h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 2px;
+        }
+
+        .stat-info span {
+            font-size: 0.8rem;
+            color: #666666;
+        }
+
+        .card-details-enhanced {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666666;
+            font-size: 0.9rem;
+        }
+
+        .detail-item-enhanced i {
+            color: #D4AF37;
+            width: 18px;
+        }
+
+        .card-actions-main {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary-action {
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+        }
+
+        .btn-secondary-action {
+            background: #FFFFFF;
+            color: #0F2C59;
+            border: 2px solid #0F2C59;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #cccccc;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: #0F2C59;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 40px 0 30px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-info h1 {
+                font-size: 2rem;
+            }
+
+            .header-stats {
+                gap: 20px;
+            }
+
+            .action-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-tabs {
+                justify-content: center;
+            }
+
+            .mes-annonces-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal Styles (for future use) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-info">
+                    <h1>Mes Annonces</h1>
+                    <p>Gérez et suivez vos annonces en temps réel</p>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Annonces</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">342</span>
+                        <span class="stat-label">Vues totales</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">23</span>
+                        <span class="stat-label">Contacts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Action Bar -->
+    <section class="action-bar">
+        <div class="container">
+            <div class="action-content">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterAnnonces('all')">
+                        Toutes (8)
+                    </button>
+                    <button class="filter-tab" onclick="filterAnnonces('active')">
+                        Actives (5)
+                    </button>
+                    <button class="filter-tab" onclick="filterAnnonces('pending')">
+                        En attente (2)
+                    </button>
+                    <button class="filter-tab" onclick="filterAnnonces('expired')">
+                        Expirées (1)
+                    </button>
+                </div>
+                <button class="btn-nouvelle-annonce" onclick="nouvelleAnnonce()">
+                    <i class="fas fa-plus"></i>
+                    Nouvelle annonce
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Mes Annonces Grid -->
+        <div class="mes-annonces-grid" id="mesAnnonces">
+            <!-- Annonce Active 1 -->
+            <div class="mon-annonce-card fade-in" data-status="active">
+                <div class="card-status-bar status-active"></div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="BMW M4">
+                    <div class="card-badges">
+                        <div class="status-badge badge-active">
+                            <i class="fas fa-check-circle"></i> Active
+                        </div>
+                        <div class="premium-badge">
+                            <i class="fas fa-star"></i> Premium
+                        </div>
+                    </div>
+                    <div class="card-actions-overlay">
+                        <button class="quick-action action-edit" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="quick-action action-promote" title="Promouvoir">
+                            <i class="fas fa-rocket"></i>
+                        </button>
+                        <button class="quick-action action-delete" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">BMW M4 Competition</h3>
+                    <div class="card-subtitle">
+                        <i class="fas fa-calendar-alt"></i>
+                        Publiée le 12 Sept 2024
+                    </div>
+                    <div class="card-price">
+                        89 500 €
+                        <span class="price-change price-down">
+                            <i class="fas fa-arrow-down"></i> -2k
+                        </span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-item-card">
+                            <div class="stat-icon views">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>156</h4>
+                                <span>Vues</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon contacts">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>12</h4>
+                                <span>Contacts</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>8</h4>
+                                <span>Favoris</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon days">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>28</h4>
+                                <span>Jours restants</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-details-enhanced">
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-calendar"></i>
+                            <span>2023</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>12 500 km</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>Essence</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-cog"></i>
+                            <span>Automatique</span>
+                        </div>
+                    </div>
+                    <div class="card-actions-main">
+                        <button class="btn-action btn-primary-action">
+                            <i class="fas fa-chart-line"></i>
+                            Statistiques
+                        </button>
+                        <button class="btn-action btn-secondary-action">
+                            <i class="fas fa-edit"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce Active 2 -->
+            <div class="mon-annonce-card fade-in" data-status="active">
+                <div class="card-status-bar status-active"></div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mercedes AMG">
+                    <div class="card-badges">
+                        <div class="status-badge badge-active">
+                            <i class="fas fa-check-circle"></i> Active
+                        </div>
+                    </div>
+                    <div class="card-actions-overlay">
+                        <button class="quick-action action-edit" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="quick-action action-promote" title="Promouvoir">
+                            <i class="fas fa-rocket"></i>
+                        </button>
+                        <button class="quick-action action-delete" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Mercedes-AMG C63 S</h3>
+                    <div class="card-subtitle">
+                        <i class="fas fa-calendar-alt"></i>
+                        Publiée le 8 Sept 2024
+                    </div>
+                    <div class="card-price">
+                        95 000 €
+                        <span class="price-change price-up">
+                            <i class="fas fa-arrow-up"></i> +3k
+                        </span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-item-card">
+                            <div class="stat-icon views">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>89</h4>
+                                <span>Vues</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon contacts">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>7</h4>
+                                <span>Contacts</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>5</h4>
+                                <span>Favoris</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon days">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>32</h4>
+                                <span>Jours restants</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-details-enhanced">
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-calendar"></i>
+                            <span>2022</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>8 900 km</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>Essence</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-cog"></i>
+                            <span>Automatique</span>
+                        </div>
+                    </div>
+                    <div class="card-actions-main">
+                        <button class="btn-action btn-primary-action">
+                            <i class="fas fa-chart-line"></i>
+                            Statistiques
+                        </button>
+                        <button class="btn-action btn-secondary-action">
+                            <i class="fas fa-edit"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce En attente -->
+            <div class="mon-annonce-card fade-in" data-status="pending">
+                <div class="card-status-bar status-pending"></div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1544829099-b9a0c5303bea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Audi RS6">
+                    <div class="card-badges">
+                        <div class="status-badge badge-pending">
+                            <i class="fas fa-clock"></i> En attente
+                        </div>
+                        <div class="premium-badge">
+                            <i class="fas fa-star"></i> Premium
+                        </div>
+                    </div>
+                    <div class="card-actions-overlay">
+                        <button class="quick-action action-edit" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="quick-action action-delete" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Audi RS6 Avant</h3>
+                    <div class="card-subtitle">
+                        <i class="fas fa-calendar-alt"></i>
+                        Soumise le 14 Sept 2024
+                    </div>
+                    <div class="card-price">125 000 €</div>
+                    <div class="card-stats">
+                        <div class="stat-item-card">
+                            <div class="stat-icon views">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>-</h4>
+                                <span>En révision</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>-</h4>
+                                <span>En révision</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon days">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>24h</h4>
+                                <span>Délai restant</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-details-enhanced">
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-calendar"></i>
+                            <span>2024</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>3 200 km</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>Essence</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-cog"></i>
+                            <span>Automatique</span>
+                        </div>
+                    </div>
+                    <div class="card-actions-main">
+                        <button class="btn-action btn-primary-action">
+                            <i class="fas fa-info-circle"></i>
+                            Détails révision
+                        </button>
+                        <button class="btn-action btn-secondary-action">
+                            <i class="fas fa-edit"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce Expirée -->
+            <div class="mon-annonce-card fade-in" data-status="expired">
+                <div class="card-status-bar status-expired"></div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Porsche 911">
+                    <div class="card-badges">
+                        <div class="status-badge badge-expired">
+                            <i class="fas fa-times-circle"></i> Expirée
+                        </div>
+                    </div>
+                    <div class="card-actions-overlay">
+                        <button class="quick-action action-edit" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="quick-action action-promote" title="Republier">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                        <button class="quick-action action-delete" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Porsche 911 Turbo S</h3>
+                    <div class="card-subtitle">
+                        <i class="fas fa-calendar-alt"></i>
+                        Expirée le 10 Sept 2024
+                    </div>
+                    <div class="card-price">195 000 €</div>
+                    <div class="card-stats">
+                        <div class="stat-item-card">
+                            <div class="stat-icon views">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>245</h4>
+                                <span>Vues totales</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon contacts">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>18</h4>
+                                <span>Contacts reçus</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>15</h4>
+                                <span>Favoris</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon days">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>4</h4>
+                                <span>Jours écoulés</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-details-enhanced">
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-calendar"></i>
+                            <span>2023</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>5 500 km</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>Essence</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-cog"></i>
+                            <span>PDK</span>
+                        </div>
+                    </div>
+                    <div class="card-actions-main">
+                        <button class="btn-action btn-primary-action">
+                            <i class="fas fa-redo"></i>
+                            Republier
+                        </button>
+                        <button class="btn-action btn-secondary-action">
+                            <i class="fas fa-chart-line"></i>
+                            Rapport final
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annonce Vendue -->
+            <div class="mon-annonce-card fade-in" data-status="sold">
+                <div class="card-status-bar status-sold"></div>
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Range Rover">
+                    <div class="card-badges">
+                        <div class="status-badge badge-sold">
+                            <i class="fas fa-handshake"></i> Vendue
+                        </div>
+                        <div class="premium-badge">
+                            <i class="fas fa-star"></i> Premium
+                        </div>
+                    </div>
+                    <div class="card-actions-overlay">
+                        <button class="quick-action action-delete" title="Archiver">
+                            <i class="fas fa-archive"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">Range Rover Sport SVR</h3>
+                    <div class="card-subtitle">
+                        <i class="fas fa-handshake"></i>
+                        Vendue le 5 Sept 2024
+                    </div>
+                    <div class="card-price">
+                        145 000 €
+                        <span class="price-change" style="color: #28a745;">
+                            <i class="fas fa-check"></i> Vendue
+                        </span>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-item-card">
+                            <div class="stat-icon views">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>189</h4>
+                                <span>Vues totales</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon contacts">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>14</h4>
+                                <span>Contacts reçus</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon favorites">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>11</h4>
+                                <span>Favoris</span>
+                            </div>
+                        </div>
+                        <div class="stat-item-card">
+                            <div class="stat-icon days">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h4>22</h4>
+                                <span>Jours en ligne</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-details-enhanced">
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-calendar"></i>
+                            <span>2023</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>7 800 km</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>Essence</span>
+                        </div>
+                        <div class="detail-item-enhanced">
+                            <i class="fas fa-cog"></i>
+                            <span>Automatique</span>
+                        </div>
+                    </div>
+                    <div class="card-actions-main">
+                        <button class="btn-action btn-primary-action">
+                            <i class="fas fa-download"></i>
+                            Télécharger rapport
+                        </button>
+                        <button class="btn-action btn-secondary-action">
+                            <i class="fas fa-archive"></i>
+                            Archiver
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fas fa-car"></i>
+            <h3>Aucune annonce trouvée</h3>
+            <p>Vous n'avez pas encore d'annonces dans cette catégorie</p>
+            <button class="btn-nouvelle-annonce" onclick="nouvelleAnnonce()">
+                <i class="fas fa-plus"></i>
+                Créer ma première annonce
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation (pour suppression) -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: #0F2C59; margin-bottom: 15px;">
+                <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
+                Confirmer la suppression
+            </h3>
+            <p style="margin-bottom: 25px; color: #666666;">
+                Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                <button onclick="closeModal()" style="padding: 10px 20px; background: #cccccc; border: none; border-radius: 6px; cursor: pointer;">
+                    Annuler
+                </button>
+                <button onclick="confirmDelete()" style="padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentFilter = 'all';
+        let allAnnonces = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            allAnnonces = Array.from(document.querySelectorAll('.mon-annonce-card'));
+            setupEventListeners();
+        });
+
+        // Configuration des event listeners
+        function setupEventListeners() {
+            // Actions rapides
+            document.querySelectorAll('.quick-action').forEach(btn => {
+                btn.addEventListener('click', handleQuickAction);
+            });
+
+            // Actions principales
+            document.querySelectorAll('.btn-action').forEach(btn => {
+                btn.addEventListener('click', handleMainAction);
+            });
+        }
+
+        // Gestion des filtres
+        function filterAnnonces(status) {
+            currentFilter = status;
+            
+            // Mise à jour des onglets
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const grid = document.getElementById('mesAnnonces');
+            const emptyState = document.getElementById('emptyState');
+            
+            let visibleCount = 0;
+            
+            allAnnonces.forEach(card => {
+                if (status === 'all' || card.dataset.status === status) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Affichage de l'état vide si nécessaire
+            if (visibleCount === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+            } else {
+                grid.style.display = 'grid';
+                emptyState.style.display = 'none';
+            }
+        }
+
+        // Gestion des actions rapides
+        function handleQuickAction(event) {
+            event.stopPropagation();
+            const action = event.currentTarget;
+            const card = action.closest('.mon-annonce-card');
+            const title = card.querySelector('.card-title').textContent;
+
+            if (action.classList.contains('action-edit')) {
+                editAnnonce(card);
+            } else if (action.classList.contains('action-promote')) {
+                promoteAnnonce(card);
+            } else if (action.classList.contains('action-delete')) {
+                showDeleteConfirm(card);
+            }
+        }
+
+        // Gestion des actions principales
+        function handleMainAction(event) {
+            const action = event.currentTarget;
+            const card = action.closest('.mon-annonce-card');
+            const buttonText = action.textContent.trim();
+
+            if (buttonText.includes('Statistiques')) {
+                showStatistics(card);
+            } else if (buttonText.includes('Modifier')) {
+                editAnnonce(card);
+            } else if (buttonText.includes('Republier')) {
+                republishAnnonce(card);
+            } else if (buttonText.includes('Rapport')) {
+                downloadReport(card);
+            } else if (buttonText.includes('Archiver')) {
+                archiveAnnonce(card);
+            }
+        }
+
+        // Actions spécifiques
+        function editAnnonce(card) {
+            const title = card.querySelector('.card-title').textContent;
+            showNotification(`Modification de "${title}"`, 'info');
+            // Ici, rediriger vers la page d'édition
+            // window.location.href = '/edit-annonce/' + annonceId;
+        }
+
+        function promoteAnnonce(card) {
+            const title = card.querySelector('.card-title').textContent;
+            showNotification(`Promotion de "${title}" en cours...`, 'success');
+            
+            // Animation de promotion
+            card.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                card.style.transform = '';
+                // Ajouter le badge premium si pas déjà présent
+                const badges = card.querySelector('.card-badges');
+                if (!badges.querySelector('.premium-badge')) {
+                    const premiumBadge = document.createElement('div');
+                    premiumBadge.className = 'premium-badge';
+                    premiumBadge.innerHTML = '<i class="fas fa-star"></i> Premium';
+                    badges.appendChild(premiumBadge);
+                }
+            }, 200);
+        }
+
+        function showDeleteConfirm(card) {
+            document.getElementById('confirmModal').style.display = 'block';
+            document.getElementById('confirmModal').dataset.cardId = Array.from(allAnnonces).indexOf(card);
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function confirmDelete() {
+            const cardIndex = parseInt(document.getElementById('confirmModal').dataset.cardId);
+            const card = allAnnonces[cardIndex];
+            const title = card.querySelector('.card-title').textContent;
+            
+            // Animation de suppression
+            card.style.transform = 'translateX(-100%)';
+            card.style.opacity = '0';
+            
+            setTimeout(() => {
+                card.remove();
+                allAnnonces.splice(cardIndex, 1);
+                updateStats();
+                showNotification(`"${title}" a été supprimée`, 'success');
+            }, 300);
+            
+            closeModal();
+        }
+
+        function showStatistics(card) {
+            const title = card.querySelector('.card-title').textContent;
+            showNotification(`Ouverture des statistiques pour "${title}"`, 'info');
+            // Ici, ouvrir une modal ou rediriger vers la page de stats
+        }
+
+        function republishAnnonce(card) {
+            const title = card.querySelector('.card-title').textContent;
+            
+            // Changer le statut visuel
+            card.dataset.status = 'active';
+            card.querySelector('.card-status-bar').className = 'card-status-bar status-active';
+            card.querySelector('.status-badge').innerHTML = '<i class="fas fa-check-circle"></i> Active';
+            card.querySelector('.status-badge').className = 'status-badge badge-active';
+            
+            showNotification(`"${title}" a été republiée avec succès!`, 'success');
+            updateStats();
+        }
+
+        function downloadReport(card) {
+            const title = card.querySelector('.card-title').textContent;
+            showNotification(`Téléchargement du rapport pour "${title}"`, 'info');
+            // Simuler le téléchargement
+            setTimeout(() => {
+                showNotification('Rapport téléchargé avec succès!', 'success');
+            }, 1000);
+        }
+
+        function archiveAnnonce(card) {
+            const title = card.querySelector('.card-title').textContent;
+            card.style.opacity = '0.5';
+            showNotification(`"${title}" a été archivée`, 'success');
+        }
+
+        function nouvelleAnnonce() {
+            showNotification('Redirection vers la création d\'annonce...', 'info');
+            // window.location.href = '/nouvelle-annonce';
+        }
+
+        // Mise à jour des statistiques
+        function updateStats() {
+            const activeCount = allAnnonces.filter(card => card.dataset.status === 'active').length;
+            const pendingCount = allAnnonces.filter(card => card.dataset.status === 'pending').length;
+            const expiredCount = allAnnonces.filter(card => card.dataset.status === 'expired').length;
+            const totalCount = allAnnonces.length;
+            
+            // Mettre à jour les compteurs dans les onglets
+            document.querySelector('[onclick="filterAnnonces(\'all\')"]').textContent = `Toutes (${totalCount})`;
+            document.querySelector('[onclick="filterAnnonces(\'active\')"]').textContent = `Actives (${activeCount})`;
+            document.querySelector('[onclick="filterAnnonces(\'pending\')"]').textContent = `En attente (${pendingCount})`;
+            document.querySelector('[onclick="filterAnnonces(\'expired\')"]').textContent = `Expirées (${expiredCount})`;
+            
+            // Mettre à jour les stats du header
+            document.querySelector('.header-stats .stat-number').textContent = totalCount;
+        }
+
+        // Système de notifications
+        function showNotification(message, type = 'info') {
+            // Créer la notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                transform: translateX(400px);
+                transition: all 0.3s ease;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            `;
+            
+            // Couleurs selon le type
+            const colors = {
+                'success': '#28a745',
+                'info': '#0F2C59',
+                'warning': '#ffc107',
+                'error': '#dc3545'
+            };
+            
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animation d'entrée
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Suppression automatique
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Modal click outside to close
+        window.onclick = function(event) {
+            const modal = document.getElementById('confirmModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>>
+{% endblock %}

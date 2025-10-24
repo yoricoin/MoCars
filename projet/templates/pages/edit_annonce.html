@@ -1,0 +1,1373 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<head>
+    <title>Modifier l'annonce - {{ annonce.titre }} - Mocars</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ================================
+           BREADCRUMB SECTION
+        ================================ */
+        .breadcrumb {
+            background: #FFFFFF;
+            padding: 20px 0;
+            border-bottom: 1px solid #E0E0E0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .breadcrumb-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: #666666;
+        }
+
+        .breadcrumb-content a {
+            color: #0F2C59;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-content a:hover {
+            color: #D4AF37;
+        }
+
+        .breadcrumb-content i.fas.fa-chevron-right {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        /* ================================
+           HEADER SECTION
+        ================================ */
+        .form-header {
+            background: #FFFFFF;
+            padding: 40px 0;
+            margin: 30px 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(15, 44, 89, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #D4AF37, #0F2C59, #D4AF37);
+        }
+
+        .form-title {
+            color: #0F2C59;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-subtitle {
+            color: #666666;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            max-width: 400px;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #D4AF37, #0F2C59);
+            width: 75%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* ================================
+           MESSAGES SECTION
+        ================================ */
+        .messages-container {
+            margin: 20px 0;
+        }
+
+        .alert {
+            padding: 18px 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+            border-left: 4px solid #28a745;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+            border-left: 4px solid #dc3545;
+            color: #721c24;
+        }
+
+        /* ================================
+           MAIN FORM CONTAINER
+        ================================ */
+        .edit-form-container {
+            background: #FFFFFF;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(15, 44, 89, 0.12);
+            margin-bottom: 30px;
+        }
+
+        /* ================================
+           FORM SECTIONS
+        ================================ */
+        .form-section {
+            padding: 50px 40px;
+            border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+            position: relative;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-section:nth-child(even) {
+            background: rgba(248, 249, 250, 0.3);
+        }
+
+        .section-title {
+            color: #0F2C59;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: 0 6px 20px rgba(15, 44, 89, 0.3);
+        }
+
+        /* ================================
+           FORM GRID SYSTEM
+        ================================ */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            align-items: start;
+        }
+
+        .form-grid-full {
+            grid-column: 1 / -1;
+        }
+
+        .form-grid-half {
+            grid-column: span 1;
+        }
+
+        /* ================================
+           FORM FIELDS
+        ================================ */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #333333;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: #dc3545;
+            margin-left: 6px;
+            font-size: 1.2rem;
+        }
+
+        .form-label i {
+            color: #0F2C59;
+            width: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid #E0E0E0;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-family: inherit;
+            background: #FFFFFF;
+            color: #333333;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15), 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-control:hover:not(:focus) {
+            border-color: #D4AF37;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        /* ================================
+           SPECIFIC FIELD TYPES
+        ================================ */
+        textarea.form-control {
+            resize: vertical;
+            min-height: 140px;
+            line-height: 1.6;
+        }
+
+        select.form-control {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23666666' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 16px center;
+            background-repeat: no-repeat;
+            background-size: 18px;
+            appearance: none;
+            padding-right: 50px;
+        }
+
+        /* ================================
+           CHECKBOX STYLING
+        ================================ */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 24px;
+            border: 2px solid #E0E0E0;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .checkbox-group:hover {
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            accent-color: #D4AF37;
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+
+        .checkbox-label {
+            color: #333333;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ================================
+           IMAGE UPLOAD SECTION
+        ================================ */
+        .image-upload-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 16px;
+            padding: 40px;
+            border: 3px dashed #D4AF37;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 49%, rgba(212, 175, 55, 0.05) 50%, transparent 51%);
+            background-size: 20px 20px;
+        }
+
+        .image-upload-section:hover {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(15, 44, 89, 0.05));
+            border-color: #0F2C59;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .upload-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 25px;
+            box-shadow: 0 8px 25px rgba(15, 44, 89, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .upload-text {
+            color: #333333;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .upload-subtext {
+            color: #666666;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-button {
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(15, 44, 89, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .file-input-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(15, 44, 89, 0.4);
+        }
+
+        /* ================================
+           CURRENT IMAGES DISPLAY
+        ================================ */
+        .current-images {
+            margin-top: 30px;
+        }
+
+        .current-images h4 {
+            color: #0F2C59;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: #F0F0F0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .image-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 35px;
+            height: 35px;
+            background: rgba(220, 53, 69, 0.9);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .image-delete:hover {
+            background: #dc3545;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+
+        /* ================================
+           FORM ACTIONS
+        ================================ */
+        .form-actions {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(15, 44, 89, 0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .actions-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .actions-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 160px;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            color: #FFFFFF;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #545b62);
+            color: #FFFFFF;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: #FFFFFF;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0a1d3d, #143461);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a6268, #4e555b);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #c82333, #bd2130);
+        }
+
+        /* ================================
+           ERROR HANDLING
+        ================================ */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .form-control.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15);
+        }
+
+        /* ================================
+           LOADING STATES
+        ================================ */
+        .btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+            position: relative;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ================================
+           RESPONSIVE DESIGN
+        ================================ */
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            
+            .form-section {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .form-section {
+                padding: 30px 20px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                padding: 30px 20px;
+                text-align: center;
+            }
+
+            .actions-left,
+            .actions-right {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .actions-right {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+            
+            .form-title {
+                font-size: 2.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+
+            .images-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .form-section {
+                padding: 25px 15px;
+            }
+            
+            .form-title {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .section-icon {
+                width: 45px;
+                height: 45px;
+            }
+
+            .images-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* ================================
+           ANIMATIONS
+        ================================ */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .form-section {
+            animation: slideInUp 0.6s ease-out backwards;
+        }
+
+        .form-section:nth-child(1) { animation-delay: 0.1s; }
+        .form-section:nth-child(2) { animation-delay: 0.2s; }
+        .form-section:nth-child(3) { animation-delay: 0.3s; }
+        .form-section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-control:focus {
+            animation: focusPulse 0.4s ease-out;
+        }
+
+        @keyframes focusPulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 12px rgba(212, 175, 55, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+            }
+        }
+
+        /* ================================
+           NOTIFICATION STYLES
+        ================================ */
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutToRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ================================
+         BREADCRUMB NAVIGATION
+    ================================ -->
+    <section class="breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <a href="/"><i class="fas fa-home"></i> Accueil</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="{% url 'mesannonces' %}">Mes annonces</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Modifier l'annonce</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <!-- ================================
+             FORM HEADER
+        ================================ -->
+        <div class="form-header fade-in">
+            <h1 class="form-title">Modifier votre annonce</h1>
+            <p class="form-subtitle">Mettez à jour les informations de votre véhicule</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- ================================
+             MESSAGES DISPLAY
+        ================================ -->
+        <div class="messages-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% endif %}"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- ================================
+             MAIN FORM
+        ================================ -->
+        <form method="post" enctype="multipart/form-data" id="editAnnonceForm" action="{% url 'edit_annonce' annonce.id %}">
+            {% csrf_token %}
+            
+            <div class="edit-form-container">
+                <!-- ================================
+                     BASIC INFORMATION SECTION
+                ================================ -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        Informations générales
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group form-grid-full">
+                            <label for="{{ form.titre.id_for_label }}" class="form-label required">
+                                <i class="fas fa-tag"></i>
+                                Titre de l'annonce
+                            </label>
+                            {{ form.titre }}
+                            {% if form.titre.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.titre.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group form-grid-full">
+                            <label for="{{ form.description.id_for_label }}" class="form-label required">
+                                <i class="fas fa-align-left"></i>
+                                Description détaillée
+                            </label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.description.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group form-grid-half">
+                            <label for="{{ form.localisation.id_for_label }}" class="form-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Localisation
+                            </label>
+                            {{ form.localisation }}
+                            {% if form.localisation.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.localisation.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group form-grid-half">
+                            <label class="form-label">
+                                <i class="fas fa-shield-alt"></i>
+                                Statut du véhicule
+                            </label>
+                            <div class="checkbox-group">
+                                {{ form.dedouaner }}
+                                <label for="{{ form.dedouaner.id_for_label }}" class="checkbox-label">
+                                    <i class="fas fa-check-circle"></i>
+                                    Véhicule dédouané
+                                </label>
+                            </div>
+                            {% if form.dedouaner.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.dedouaner.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================================
+                     VEHICLE DETAILS SECTION
+                ================================ -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        Caractéristiques du véhicule
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ form.marque.id_for_label }}" class="form-label required">
+                                <i class="fas fa-industry"></i>
+                                Marque
+                            </label>
+                            {{ form.marque }}
+                            {% if form.marque.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.marque.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.modele.id_for_label }}" class="form-label required">
+                                <i class="fas fa-car-side"></i>
+                                Modèle
+                            </label>
+                            {{ form.modele }}
+                            {% if form.modele.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.modele.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.annee.id_for_label }}" class="form-label required">
+                                <i class="fas fa-calendar-alt"></i>
+                                Année
+                            </label>
+                            {{ form.annee }}
+                            {% if form.annee.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.annee.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.kilometrage.id_for_label }}" class="form-label required">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Kilométrage
+                            </label>
+                            {{ form.kilometrage }}
+                            {% if form.kilometrage.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.kilometrage.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.carburant.id_for_label }}" class="form-label required">
+                                <i class="fas fa-gas-pump"></i>
+                                Carburant
+                            </label>
+                            {{ form.carburant }}
+                            {% if form.carburant.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.carburant.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.transmission.id_for_label }}" class="form-label required">
+                                <i class="fas fa-cog"></i>
+                                Transmission
+                            </label>
+                            {{ form.transmission }}
+                            {% if form.transmission.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.transmission.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================================
+                     PRICE & FINANCIAL SECTION
+                ================================ -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        Prix et informations financières
+                    </h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ form.prix.id_for_label }}" class="form-label required">
+                                <i class="fas fa-tag"></i>
+                                Prix (MAD)
+                            </label>
+                            {{ form.prix }}
+                            {% if form.prix.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.prix.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.vignette.id_for_label }}" class="form-label">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                Vignette (MAD)
+                            </label>
+                            {{ form.vignette }}
+                            {% if form.vignette.errors %}
+                                <div class="error-message">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    {{ form.vignette.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================================
+                     IMAGES SECTION
+                ================================ -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <div class="section-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        Photos du véhicule
+                    </h2>
+
+                    <!-- Current Images Display -->
+                    {% if annonce.images.exists %}
+                    <div class="current-images">
+                        <h4>
+                            <i class="fas fa-photo-video"></i>
+                            Images actuelles
+                        </h4>
+                        
+                      
+                        <div class="images-grid">
+                            {% for image in annonce.images.all %}
+                            <div class="image-item">
+                                <img src="{{ image.image.url }}" alt="Image {{ forloop.counter }}" loading="lazy">
+                                <button type="button" class="image-delete" onclick="deleteImage({{ image.id }})" title="Supprimer cette image">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <br>
+                       
+                    </div>
+                    {% endif %}
+
+                    <!-- Upload New Images -->
+                    <div class="image-upload-section">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">Ajouter de nouvelles photos</div>
+                        <div class="upload-subtext">
+                            Formats acceptés: JPG, PNG, GIF • Maximum 5MB par image
+                        </div>
+                        <input type="file" id="imageUpload" name="imageUpload" class="file-input" multiple accept="image/*">
+                        <button type="button" class="file-input-button" onclick="document.getElementById('imageUpload').click()">
+                            <i class="fas fa-plus"></i>
+                            Choisir les fichiers
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================================
+                 FORM ACTIONS
+            ================================ -->
+            <div class="form-actions">
+                <div class="actions-left">
+                    <a href="{% url 'mesannonces' %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Retour
+                    </a>
+                </div>
+                
+                <div class="actions-right">
+                    <button type="button" class="btn btn-danger" onclick="deleteAnnonce({{ annonce.id }}, event)">
+                  <i class="fas fa-trash-alt"></i> Supprimer
+                    </button>
+
+                    
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i>
+                        Sauvegarder
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br>
+    <br>
+
+
+    <script>
+     document.addEventListener('DOMContentLoaded', function () {
+    initializeForm();
+    setupEventListeners();
+    setupValidation();
+    setupAccessibility();
+});
+
+// ================================
+// FORM INITIALIZATION
+// ================================
+function initializeForm() {
+    const form = document.getElementById('editAnnonceForm');
+    if (!form) return;
+    form.querySelectorAll('input, select, textarea').forEach(f => {
+        if (!f.classList.contains('file-input') && f.type !== 'checkbox') f.classList.add('form-control');
+        f.parentNode.querySelector('.error-message') && f.classList.add('error');
+        if (f.tagName === 'TEXTAREA') autoResizeTextarea(f);
+    });
+}
+
+// ================================
+// EVENT LISTENERS
+// ================================
+function setupEventListeners() {
+    const form = document.getElementById('editAnnonceForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const imageUpload = document.getElementById('imageUpload');
+
+    form && form.addEventListener('submit', e => handleFormSubmission(submitBtn));
+    imageUpload && imageUpload.addEventListener('change', handleImageUpload);
+    setupPriceFormatting();
+}
+
+// ================================
+// FORM SUBMISSION
+// ================================
+function handleFormSubmission(submitBtn) {
+    if (!submitBtn) return;
+    submitBtn.classList.add('loading'); 
+    submitBtn.disabled = true;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sauvegarde...';
+    setTimeout(() => { 
+        submitBtn.classList.remove('loading'); 
+        submitBtn.disabled = false; 
+        submitBtn.innerHTML = originalText; 
+    }, 15000);
+}
+
+// ================================
+// FIELD VALIDATION
+// ================================
+function setupValidation() {
+    document.querySelectorAll('#editAnnonceForm input, #editAnnonceForm select, #editAnnonceForm textarea')
+        .forEach(f => { 
+            f.addEventListener('input', () => clearFieldError(f)); 
+            f.addEventListener('blur', () => validateField(f)); 
+        });
+}
+
+function validateField(f) {
+    const n = f.name, v = f.value.trim();
+    let valid = true, msg = '';
+    if(f.hasAttribute('required') || f.closest('.form-label')?.classList.contains('required')) {
+        if(!v){ valid=false; msg='Ce champ est requis.'; }
+    }
+    switch(n){
+        case 'prix':
+        case 'vignette':
+            if(v && (isNaN(v) || parseFloat(v) < 0)){ valid=false; msg='Veuillez saisir un montant valide.'; }
+            break;
+        case 'kilometrage':
+            if(v && (isNaN(v) || parseInt(v) < 0)){ valid=false; msg='Veuillez saisir un kilométrage valide.'; }
+            break;
+        case 'annee':
+            const y = parseInt(v), c = new Date().getFullYear();
+            if(v && (isNaN(y) || y<1900 || y>c+1)){ valid=false; msg=`L'année doit être comprise entre 1900 et ${c+1}.`; }
+    }
+    valid ? clearFieldError(f) : showFieldError(f, msg);
+    return valid;
+}
+
+function showFieldError(f,m){
+    f.classList.add('error');
+    let e = f.parentNode.querySelector('.error-message');
+    if(!e){ e=document.createElement('div'); e.className='error-message'; f.parentNode.appendChild(e); }
+    e.innerHTML=`<i class="fas fa-exclamation-circle"></i> ${m}`;
+    e.style.display='block';
+}
+
+function clearFieldError(f){
+    f.classList.remove('error');
+    const e = f.parentNode.querySelector('.error-message');
+    e && (e.style.display='none');
+}
+
+// ================================
+// TEXTAREA AUTO-RESIZE
+// ================================
+function autoResizeTextarea(t){
+    t.addEventListener('input', () => { t.style.height='auto'; t.style.height=t.scrollHeight+'px'; });
+    t.style.height='auto';
+    t.style.height=t.scrollHeight+'px';
+}
+
+// ================================
+// IMAGE HANDLING
+// ================================
+function handleImageUpload(e){
+    const files = Array.from(e.target.files || []);
+    if(!files.length) return;
+    const valid=[], invalid=[];
+    files.forEach(f=>{
+        if(f.size>5*1024*1024) invalid.push(`${f.name} (trop volumineux)`);
+        else if(!f.type.startsWith('image/')) invalid.push(`${f.name} (format non supporté)`);
+        else valid.push(f);
+    });
+    valid.length && displayNewImages(valid);
+    let msg='';
+    if(valid.length) msg=`${valid.length} image(s) sélectionnée(s)`;
+    if(invalid.length) msg += (msg?'. ':'') + `Fichiers ignorés: ${invalid.join(', ')}`;
+    showNotification(msg, valid.length ? 'success':'error');
+}
+
+function displayNewImages(files){
+    let section=document.querySelector('.current-images');
+    if(!section){
+        section=document.createElement('div');
+        section.className='current-images';
+        section.innerHTML=`<h4><i class="fas fa-photo-video"></i> Images actuelles et nouvelles</h4><div class="images-grid"></div>`;
+        const upload=document.querySelector('.image-upload-section');
+        upload.parentNode.insertBefore(section, upload);
+    }
+    const grid=section.querySelector('.images-grid');
+    files.forEach((f,i)=>{
+        const reader=new FileReader();
+        reader.onload=e=>{
+            const d=document.createElement('div');
+            d.className='image-item new-image';
+            d.innerHTML=`<img src="${e.target.result}" alt="Nouvelle image ${i+1}" loading="lazy">
+            <button type="button" class="image-delete" onclick="removeNewImage(this)" title="Supprimer cette nouvelle image"><i class="fas fa-times"></i></button>`;
+            d.style.opacity='0'; d.style.transform='scale(0.8)'; grid.appendChild(d);
+            setTimeout(()=>{ d.style.transition='all 0.3s ease'; d.style.opacity='1'; d.style.transform='scale(1)'; },50);
+        };
+        reader.readAsDataURL(f);
+    });
+}
+
+function removeNewImage(b){
+    const d=b.closest('.image-item');
+    if(!d) return;
+    const n=d.querySelector('img')?.alt||'';
+    if(confirm(`Supprimer ${n} ?`)){
+        d.style.transition='all 0.3s ease'; d.style.opacity='0'; d.style.transform='scale(0.8)';
+        setTimeout(()=>{
+            d.remove();
+            if(!document.querySelectorAll('.image-item').length) document.querySelector('.current-images')?.remove();
+            showNotification('Image supprimée','success');
+        },300);
+    }
+}
+
+// ================================
+// PRICE FORMATTING
+// ================================
+function setupPriceFormatting(){
+    ['prix','vignette'].forEach(n=>{
+        const f=document.querySelector(`input[name="${n}"]`);
+        f && f.addEventListener('input', e=>{
+            let v=e.target.value.replace(/[^\d.]/g,'');
+            const p=v.split('.');
+            if(p.length>2) v=p[0]+'.'+p.slice(1).join('');
+            e.target.value=v;
+        });
+    });
+}
+
+// ================================
+// ACCESSIBILITY
+// ================================
+function setupAccessibility(){
+    document.querySelectorAll('.form-label.required').forEach(l=>{
+        const f=document.getElementById(l.getAttribute('for'));
+        f && f.setAttribute('aria-required','true');
+    });
+}
+
+// ================================
+// NOTIFICATIONS
+// ================================
+function showNotification(msg,type='info'){
+    document.querySelectorAll('.notification').forEach(n=>n.remove());
+    const n=document.createElement('div'); n.className='notification';
+    const icons={success:'fa-check-circle',error:'fa-exclamation-triangle',warning:'fa-exclamation-circle',info:'fa-info-circle'};
+    const bg={success:'#28a745',error:'#dc3545',warning:'#ffc107',info:'#17a2b8'};
+    n.innerHTML=`<i class="fas ${icons[type]||'fa-info-circle'}"></i> <span>${msg}</span>`;
+    Object.assign(n.style,{
+        position:'fixed', top:'30px', right:'30px', background:bg[type]||'#17a2b8', color:'white',
+        padding:'18px 24px', borderRadius:'12px', boxShadow:'0 8px 25px rgba(0,0,0,0.2)',
+        zIndex:10000, display:'flex', alignItems:'center', gap:'12px', fontWeight:600,
+        fontSize:'1rem', minWidth:'300px', maxWidth:'400px', cursor:'pointer', animation:'slideInFromRight 0.4s ease'
+    });
+    document.body.appendChild(n);
+    setTimeout(()=>dismissNotification(n),5000);
+    n.addEventListener('click',()=>dismissNotification(n));
+}
+
+function dismissNotification(n){ n.style.animation='slideOutToRight 0.4s ease forwards'; setTimeout(()=>n.remove(),400); }
+
+// ================================
+// ADDITIONAL STYLES
+// ================================
+const s=document.createElement('style');
+s.textContent=`
+.notification:hover{transform:translateY(-2px) scale(1.02);transition:transform 0.2s ease;}
+.image-item.new-image{border:2px solid #D4AF37;position:relative;}
+.image-item.new-image::before{content:'NOUVELLE';position:absolute;top:5px;left:5px;background
+:linear-gradient(135deg,#D4AF37,#b8941f);color:white;padding:2px 8px;border-radius:4px;font-size:0.7rem;
+font-weight:bold;z-index:10;text-shadow:0 1px 2px rgba(0,0,0,0.3);}
+`;
+document.head.appendChild(s);
+
+
+    </script>
+</body>
+</html>
+{% endblock %}

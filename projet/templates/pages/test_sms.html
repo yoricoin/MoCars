@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:600px;margin:2rem auto;padding:1rem;border:1px solid #ddd;border-radius:8px;">
+    <h2>📱 Test d'envoi SMS</h2>
+    <p>Entre ton numéro de téléphone pour vérifier l’envoi via Twilio :</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="tel" name="phone" placeholder="+212600000000" required
+               style="width:100%;padding:0.5rem;margin-bottom:1rem;">
+        <textarea name="message" placeholder="Message (optionnel)" style="width:100%;padding:0.5rem;margin-bottom:1rem;"></textarea>
+        <button type="submit" style="padding:0.5rem 1rem;background:#0F2C59;color:white;border:none;border-radius:6px;">
+            Envoyer le SMS
+        </button>
+    </form>
+</div>
+{% endblock %}

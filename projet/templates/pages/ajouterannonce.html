@@ -1,0 +1,697 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une Annonce - Elite Auto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Your existing CSS remains unchanged */
+        :root {
+            --bleu-marine: #0F2C59;
+            --dore-premium: #D4AF37;
+            --bordeaux: #8A1538;
+            --gris-clair: #F5F5F5;
+            --blanc-pur: #FFFFFF;
+            --texte-sombre: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: var(--gris-clair);
+            color: var(--texte-sombre);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--bleu-marine) 0%, rgba(15, 44, 89, 0.9) 100%);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-bottom: 3rem;
+            border-radius: 0 0 30px 30px;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .hero-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--dore-premium);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .form-card {
+            background: var(--blanc-pur);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(15, 44, 89, 0.1);
+            padding: 3rem;
+            margin-top: -2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--bleu-marine);
+            margin-bottom: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--dore-premium);
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: var(--bleu-marine);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .required {
+            color: var(--bordeaux);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Lato', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--dore-premium);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 2rem;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--dore-premium);
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 2rem;
+            color: var(--dore-premium);
+            margin-bottom: 1rem;
+        }
+
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            background: #f0f0f0;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--bordeaux);
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .price-input {
+            position: relative;
+        }
+
+        .price-input::after {
+            content: 'MAD';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dore-premium);
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--bordeaux) 0%, #a31742 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(138, 21, 56, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--bleu-marine);
+            border: 2px solid var(--bleu-marine);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bleu-marine);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--dore-premium);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .help-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .form-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                min-width: auto;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Ajouter une Annonce</h1>
+            <p class="hero-subtitle">Vendez votre véhicule sur la plateforme automobile premium du Maroc</p>
+            <div class="status-badge">
+                <i class="fas fa-clock"></i>
+                Votre annonce sera vérifiée sous 24h
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form class="form-card animate-fade-in" method="post" enctype="multipart/form-data" action="{% url 'ajouterannonce' %}" >
+            {% csrf_token %}
+           
+            {% if messages %}
+    <div class="form-section">
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                <div class="alert" style="background: #e6f4ea; color: #2e7d32; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #2e7d32;">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </div>
+            {% elif message.tags == 'error' %}
+                <div class="alert" style="background: #ffebee; color: #c62828; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #c62828;">
+                    <i class="fas fa-exclamation-circle"></i> {{ message }}
+                </div>
+            {% else %}
+                <div class="alert" style="background: #fff8e1; color: #ff8f00; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #ff8f00;">
+                    <i class="fas fa-info-circle"></i> {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+            
+            <!-- Section Informations Générales -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle" style="color: var(--dore-premium); margin-right: 0.5rem;"></i>
+                    Informations Générales
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="titre">Titre de l'annonce <span class="required">*</span></label>
+                        <input type="text" id="titre" name="titre" required placeholder="Ex: BMW Série 3, excellent état, peu kilométrée" value="{{ data.titre|default:'' }}">
+                        <div class="help-text">Soyez précis et attractif pour attirer plus d'acheteurs</div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description">Description détaillée <span class="required">*</span></label>
+                        <textarea id="description" name="description" required placeholder="Décrivez votre véhicule : état, équipements, historique d'entretien, raison de vente...">{{ data.description|default:'' }}</textarea>
+                        <div class="help-text">Plus votre description est complète, plus vous augmentez vos chances de vente</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="localisation">Localisation</label>
+                        <input type="text" id="localisation" name="localisation" placeholder="Ex: Casablanca, Rabat, Marrakech..." value="{{ data.localisation|default:'' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="dedouaner" name="dedouaner" {% if data.dedouaner %}checked{% endif %}>
+                            <label for="dedouaner">Véhicule dédouané</label>
+                        </div>
+                        <div class="help-text">Cochez si votre véhicule est dédouané au Maroc</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Caractéristiques Techniques -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cogs" style="color: var(--dore-premium); margin-right: 0.5rem;"></i>
+                    Caractéristiques Techniques
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="marque">Marque <span class="required">*</span></label>
+                        <input type="text" id="marque" name="marque" list="marque-options" required placeholder="Ex: BMW, Audi, Renault..." value="{{ data.marque|default:'' }}">
+                        <datalist id="marque-options">
+                            {% for marque in marques %}
+                                <option value="{{ marque }}">
+                            {% endfor %}
+                        </datalist>
+                        <div class="help-text">Tapez la marque de votre véhicule</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modele">Modèle <span class="required">*</span></label>
+                        <input type="text" id="modele" name="modele" required placeholder="Ex: Série 3, Golf, C-Class..." value="{{ data.modele|default:'' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="annee">Année <span class="required">*</span></label>
+                        <select id="annee" name="annee" required>
+                            <option value="">Sélectionner l'année</option>
+                            {% for annee in annees %}
+                                <option value="{{ annee }}" {% if data.annee == annee|stringformat:"i" %}selected{% endif %}>{{ annee }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kilometrage">Kilométrage (km) <span class="required">*</span></label>
+                        <input type="number" id="kilometrage" name="kilometrage" required min="0" placeholder="150000" value="{{ data.kilometrage|default:'' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="carburant">Carburant <span class="required">*</span></label>
+                        <select id="carburant" name="carburant" required>
+                            <option value="">Type de carburant</option>
+                            <option value="essence" {% if data.carburant == 'essence' %}selected{% endif %}>Essence</option>
+                            <option value="diesel" {% if data.carburant == 'diesel' %}selected{% endif %}>Diesel</option>
+                            <option value="hybride" {% if data.carburant == 'hybride' %}selected{% endif %}>Hybride</option>
+                            <option value="electrique" {% if data.carburant == 'electrique' %}selected{% endif %}>Électrique</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transmission">Transmission <span class="required">*</span></label>
+                        <select id="transmission" name="transmission" required>
+                            <option value="">Type de transmission</option>
+                            <option value="manuelle" {% if data.transmission == 'manuelle' %}selected{% endif %}>Manuelle</option>
+                            <option value="automatique" {% if data.transmission == 'automatique' %}selected{% endif %}>Automatique</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Tarification -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-tag" style="color: var(--dore-premium); margin-right: 0.5rem;"></i>
+                    Tarification
+                </h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="prix">Prix de vente <span class="required">*</span></label>
+                        <div class="price-input">
+                            <input type="number" id="prix" name="prix" required min="0" step="0.01" placeholder="250000" value="{{ data.prix|default:'' }}">
+                        </div>
+                        <div class="help-text">Prix en dirhams marocains (MAD)</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="vignette">Vignette annuelle</label>
+                        <div class="price-input">
+                            <input type="number" id="vignette" name="vignette" min="0" step="0.01" placeholder="2500" value="{{ data.vignette|default:'' }}">
+                        </div>
+                        <div class="help-text">Montant de la taxe annuelle (MAD)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Photos -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-camera" style="color: var(--dore-premium); margin-right: 0.5rem;"></i>
+                    Photos du véhicule
+                </h2>
+                
+                <div class="form-group full-width">
+                    <label>Images (maximum 10 photos) <span class="required">*</span></label>
+                    <div class="file-upload">
+                        <input type="file" id="images" name="images" multiple accept="image/*" required>
+                        <label for="images" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt file-upload-icon"></i>
+                            <div>Cliquez pour sélectionner des photos</div>
+                            <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                                Formats acceptés: JPG, PNG, WEBP (max 5MB par photo)
+                            </div>
+                        </label>
+                    </div>
+                    <div id="preview-container" class="preview-container"></div>
+                    <div class="help-text">
+                        Ajoutez des photos de qualité : extérieur, intérieur, moteur, compteur. 
+                        Plus vous avez de photos, plus vous inspirez confiance !
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back();">
+                    <i class="fas fa-times"></i>
+                    Annuler
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Publier l'annonce
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+      // Génération des années (dernières 30 années)
+const currentYear = new Date().getFullYear();
+const yearSelect = document.getElementById('annee');
+
+// Only generate years if not already populated by Django
+if (yearSelect.options.length <= 1) {
+    for (let year = currentYear; year >= currentYear - 30; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+}
+
+// Gestion de l'aperçu des images
+const imageInput = document.getElementById('images');
+const previewContainer = document.getElementById('preview-container');
+let selectedFiles = [];
+
+// Quand l'utilisateur sélectionne des fichiers
+imageInput.addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    
+    // Limiter à 10 images
+    if (selectedFiles.length + files.length > 10) {
+        alert('Vous ne pouvez pas ajouter plus de 10 images.');
+        return;
+    }
+
+    files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+            selectedFiles.push(file);
+            createImagePreview(file, selectedFiles.length - 1);
+        }
+    });
+
+    // Mettre à jour l'input pour que Django reçoive tous les fichiers
+    updateFileInput();
+});
+
+function createImagePreview(file, index) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'preview-item';
+        previewDiv.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <button type="button" class="remove-image" onclick="removeImage(${index})">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        previewContainer.appendChild(previewDiv);
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage(index) {
+    selectedFiles.splice(index, 1);
+    updatePreviewContainer();
+    updateFileInput();
+}
+
+function updatePreviewContainer() {
+    previewContainer.innerHTML = '';
+    selectedFiles.forEach((file, index) => {
+        createImagePreview(file, index);
+    });
+}
+
+function updateFileInput() {
+    const dt = new DataTransfer();
+    selectedFiles.forEach(file => dt.items.add(file));
+    imageInput.files = dt.files;
+}
+
+// Animation d'apparition au scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.form-section').forEach(section => {
+    section.style.opacity = '0';
+    section.style.transform = 'translateY(20px)';
+    section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(section);
+});
+
+// Validation du formulaire
+document.querySelector('form').addEventListener('submit', function(e) {
+    // Mettre à jour l'input avant l'envoi pour Django
+    updateFileInput();
+
+    // Validation des champs obligatoires
+    const requiredFields = document.querySelectorAll('input[required], select[required], textarea[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.style.borderColor = '#c62828';
+            isValid = false;
+        } else {
+            field.style.borderColor = '#e0e0e0';
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Veuillez remplir tous les champs obligatoires.');
+    }
+});
+
+    </script>
+</body>
+</html>
+{% endblock %}

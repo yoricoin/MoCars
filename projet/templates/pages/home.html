@@ -1,0 +1,916 @@
+
+    {% extends 'base.html' %}
+    {% load static %}
+
+    {% block content %}
+   
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Auto - Contenu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/pages/home.css' %}">
+    <style>
+       
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+     <br>
+     <br>
+     <br>
+     <br>
+     <br>
+    
+  
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <form class="search-form">
+            <div class="form-group">
+                <label>Type de véhicule</label>
+                <select>
+                    <option>Tous</option>
+                    <option>Neuf</option>
+                    <option>Occasion</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Marque</label>
+                <select>
+                    <option>Toutes marques</option>
+                    <option>BMW</option>
+                    <option>Mercedes</option>
+                    <option>Audi</option>
+                    <option>Porsche</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Modèle</label>
+                <select>
+                    <option>Tous modèles</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Budget max</label>
+                <input type="number" placeholder="Ex: 50000">
+            </div>
+            <div class="form-group">
+                <label>Localisation</label>
+                <input type="text" placeholder="Ville ou code postal">
+            </div>
+            <button type="submit" class="search-btn">
+                <i class="fas fa-search"></i>
+                Rechercher
+            </button>
+        </form>
+    </section>
+
+    <!-- Popular Vehicles Section -->
+    <section class="section" id="vehicules">
+        <h2 class="section-title">Nos véhicules tendance</h2>
+        <div class="car-grid">
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="car-badge">Coup de cœur</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">BMW Série 3</h3>
+                    <p class="car-details">2023 • 15 000 km • Diesel</p>
+                    <p class="car-price">45 900 €</p>
+                    <a href="#" class="btn btn-primary">Voir détails</a>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="car-badge">Populaire</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">Mercedes Classe C</h3>
+                    <p class="car-details">2022 • 22 000 km • Essence</p>
+                    <p class="car-price">52 500 €</p>
+                    <a href="#" class="btn btn-primary">Voir détails</a>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="car-badge">Nouveau</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">Audi A4</h3>
+                    <p class="car-details">2023 • 8 000 km • Hybride</p>
+                    <p class="car-price">48 900 €</p>
+                    <a href="#" class="btn btn-primary">Voir détails</a>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="car-badge">Exclusif</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">Porsche Macan</h3>
+                    <p class="car-details">2022 • 18 000 km • Essence</p>
+                    <p class="car-price">68 900 €</p>
+                    <a href="#" class="btn btn-primary">Voir détails</a>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="car-badge">Tendance</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">Tesla Model 3</h3>
+                    <p class="car-details">2023 • 12 000 km • Électrique</p>
+                    <p class="car-price">42 900 €</p>
+                    <a href="#" class="btn btn-primary">Voir détails</a>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-image">
+                    <div class="car-badge">Premium</div>
+                </div>
+                <div class="car-info">
+                    <h3 class="car-title">Range Rover Evoque</h3>
+                    <p class="car-details">2022 • 25 000 km • Diesel</p>
+                    <p class="car-price">55 900 €</p>
+                    <a href="#" class="btn btn-primary">Voir détails</a>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="#" class="btn btn-gold">Voir plus de véhicules</a>
+        </div>
+    </section>
+
+    <!-- How it Works Section -->
+    <section class="section">
+        <h2 class="section-title">Comment fonctionne notre plateforme ?</h2>
+        <div class="steps">
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h3>Choisissez votre véhicule</h3>
+                <p>Parcourez notre catalogue de véhicules soigneusement sélectionnés et trouvez celui qui correspond à vos besoins.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3>Prenez contact</h3>
+                <p>Organisez un essai routier ou posez toutes vos questions à nos experts automobiles disponibles 7j/7.</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h3>Finalisez l'achat</h3>
+                <p>Bénéficiez d'une transaction 100% sécurisée avec nos options de financement et notre garantie constructeur.</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="section">
+        <h2 class="section-title">Explorez par catégorie</h2>
+        <div class="categories-grid">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h3>Berlines</h3>
+                <p>Élégance et confort</p>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-truck-pickup"></i>
+                </div>
+                <h3>SUV</h3>
+                <p>Polyvalence et robustesse</p>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h3>Sportives</h3>
+                <p>Performance et adrénaline</p>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h3>Électriques</h3>
+                <p>Innovation et écologie</p>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3>Luxe</h3>
+                <p>Prestige et raffinement</p>
+            </div>
+            
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>Économiques</h3>
+                <p>Qualité petit budget</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advantages Section -->
+    <section class="section">
+        <h2 class="section-title">Pourquoi choisir notre plateforme ?</h2>
+        <div class="advantages-grid">
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Vérification des véhicules</h3>
+                <p>Chaque véhicule est inspecté par nos experts certifiés pour garantir sa qualité et son authenticité.</p>
+            </div>
+            
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Transaction sécurisée</h3>
+                <p>Paiements cryptés et processus d'achat 100% sécurisé pour votre tranquillité d'esprit.</p>
+            </div>
+            
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Assistance 7j/7</h3>
+                <p>Notre équipe d'experts est disponible tous les jours pour vous accompagner dans votre projet automobile.</p>
+            </div>
+            
+            <div class="advantage">
+                <div class="advantage-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>Garantie options</h3>
+                <p>Bénéficiez de nos garanties étendues et options de maintenance pour rouler en toute sérénité.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section">
+        <h2 class="section-title">Ce que disent nos clients</h2>
+        <div class="testimonials-container">
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">MR</div>
+                    <div>
+                        <h4>Marie Rousseau</h4>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p>"Une expérience exceptionnelle ! J'ai trouvé la voiture de mes rêves en quelques clics. L'équipe est professionnelle et le service après-vente irréprochable."</p>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">PD</div>
+                    <div>
+                        <h4>Pierre Dubois</h4>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p>"Plateforme intuitive et sécurisée. J'ai pu vendre ma voiture rapidement et acheter celle qui me convenait parfaitement. Je recommande vivement !"</p>
+            </div>
+            
+            <div class="testimonial">
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">SL</div>
+                    <div>
+                        <h4>Sophie Laurent</h4>
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <p>"Service client remarquable et transparence totale sur l'état des véhicules. Une vraie révolution dans l'achat automobile en ligne !"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile App Section -->
+    <section class="section">
+        <div class="app-section">
+            <h2 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 1rem;">Téléchargez notre application</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">Retrouvez tous nos services dans votre poche. Recherchez, comparez et achetez votre prochaine voiture depuis votre smartphone.</p>
+            
+            <div style="display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <i class="fas fa-mobile-alt" style="font-size: 3rem; margin-bottom: 1rem; color: var(--gold);"></i>
+                    <h4>Interface intuitive</h4>
+                    <p>Design optimisé mobile</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-bell" style="font-size: 3rem; margin-bottom: 1rem; color: var(--gold);"></i>
+                    <h4>Notifications en temps réel</h4>
+                    <p>Alertes personnalisées</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fas fa-map-marker-alt" style="font-size: 3rem; margin-bottom: 1rem; color: var(--gold);"></i>
+                    <h4>Géolocalisation</h4>
+                    <p>Trouvez près de chez vous</p>
+                </div>
+            </div>
+            
+            <div class="app-buttons">
+                <a href="#" class="app-btn">
+                    <i class="fab fa-apple"></i>
+                    Télécharger sur App Store
+                </a>
+                <a href="#" class="app-btn">
+                    <i class="fab fa-google-play"></i>
+                    Disponible sur Google Play
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Search form interaction
+        const searchForm = document.querySelector('.search-form');
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Add search functionality here
+                alert('Fonctionnalité de recherche à implémenter');
+            });
+        }
+
+        // Car card hover effects
+        document.querySelectorAll('.car-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for scroll animations
+        document.querySelectorAll('.section, .car-card, .step, .advantage').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+            console.log('Elite Auto - Page d\'accueil chargée avec succès');
+        });
+    </script>
+</body>
+<style>
+     * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0F2C59;
+            --gold: #D4AF37;
+            --light-gray: #F5F5F5;
+            --text-dark: #333;
+            --burgundy: #8A1538;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--light-gray);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(15, 44, 89, 0.8), rgba(15, 44, 89, 0.8)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23ddd" width="1200" height="800"/><text x="50%" y="50%" font-size="48" fill="%23999" text-anchor="middle" dy=".3em">Voiture Premium</text></svg>');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 70%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 2;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--white);
+            padding: 4rem 2rem;
+            margin-top: -3rem;
+            position: relative;
+            z-index: 3;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+        }
+
+        .search-form {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--navy);
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 1rem;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--navy);
+        }
+
+        .search-btn {
+            background: var(--burgundy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #a01842;
+            transform: translateY(-2px);
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--navy);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 80px;
+            height: 4px;
+            background: var(--gold);
+            display: block;
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+
+        /* Car Grid */
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .car-card {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .car-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .car-image {
+            height: 250px;
+            background: #ddd;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .car-image::after {
+            content: 'Image Voiture';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        .car-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--gold);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .car-info {
+            padding: 1.5rem;
+        }
+
+        .car-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--navy);
+        }
+
+        .car-details {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .car-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--burgundy);
+            margin-bottom: 1rem;
+        }
+
+        /* Steps Section */
+        .steps {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--navy), var(--gold));
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--navy);
+        }
+
+        /* Categories */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .category-icon {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        /* Advantages */
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .advantage {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .advantage:hover {
+            transform: translateY(-5px);
+        }
+
+        .advantage-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--navy);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .stars {
+            color: var(--gold);
+        }
+
+        /* App Section */
+        .app-section {
+            background: linear-gradient(135deg, var(--navy), #1a4084);
+            color: var(--white);
+            border-radius: 20px;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .app-btn {
+            background: var(--white);
+            color: var(--navy);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .app-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,255,255,0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--navy), #1a4084);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(15, 44, 89, 0.3);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #b8941f);
+            color: var(--white);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .car-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                padding: 2rem 1rem;
+            }
+
+            .app-section {
+                padding: 3rem 2rem;
+            }
+        }
+</style>
+ {% endblock %}
+</html>

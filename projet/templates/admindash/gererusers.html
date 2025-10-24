@@ -1,0 +1,872 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gérer Utilisateurs - Mocars</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F8FAFC;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        /* Header Section */
+        .page-header {
+            background: linear-gradient(135deg, #0F2C59 0%, #1a4084 100%);
+            padding: 60px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-info h1 {
+            color: #FFFFFF;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header-info p {
+            color: #D4AF37;
+            font-size: 1.1rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+            color: #FFFFFF;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #D4AF37;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            background: #FFFFFF;
+            padding: 25px 0;
+            box-shadow: 0 1px 10px rgba(15, 44, 89, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .action-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 5px;
+            background: #F1F5F9;
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .filter-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: #64748B;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-tab.active {
+            background: #0F2C59;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(15, 44, 89, 0.15);
+        }
+
+        .search-bar {
+            position: relative;
+            max-width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: #FFFFFF;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0F2C59;
+            box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748B;
+        }
+
+        /* Users Grid */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        /* User Card */
+        .user-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(15, 44, 89, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid #E2E8F0;
+        }
+
+        .user-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(15, 44, 89, 0.12);
+            border-color: #E2E8F0;
+        }
+
+        .user-header {
+            position: relative;
+            background: linear-gradient(135deg, #F8FAFC, #E2E8F0);
+            padding: 25px;
+            text-align: center;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #0F2C59, #1a4084);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(15, 44, 89, 0.2);
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .status-admin { 
+            background: rgba(138, 21, 56, 0.95); 
+            color: #FFFFFF; 
+        }
+        .status-moderateur { 
+            background: rgba(16, 185, 129, 0.95); 
+            color: #FFFFFF; 
+        }
+        .status-utilisateur { 
+            background: rgba(59, 130, 246, 0.95); 
+            color: #FFFFFF; 
+        }
+
+        .user-body {
+            padding: 20px;
+        }
+
+        .user-name {
+            color: #1E293B;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .user-email {
+            color: #64748B;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .user-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: #F8FAFC;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: #1E293B;
+            font-size: 1.1rem;
+        }
+
+        .detail-label {
+            color: #64748B;
+            font-size: 0.8rem;
+            margin-top: 2px;
+        }
+
+        /* Card Footer Actions */
+        .card-footer-actions {
+            display: flex;
+            gap: 10px;
+            padding: 15px 20px;
+            background: #F8FAFC;
+            border-top: 1px solid #E2E8F0;
+            justify-content: center;
+        }
+
+        .card-action-btn {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+        }
+
+        .card-action-btn.promote-btn {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+
+        .card-action-btn.demote-btn {
+            background: linear-gradient(135deg, #F59E0B, #D97706);
+            color: white;
+        }
+
+        .card-action-btn.delete-btn {
+            background: linear-gradient(135deg, #8A1538, #a01842);
+            color: white;
+        }
+
+        .card-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-action-btn:disabled {
+            background: #CBD5E1;
+            color: #64748B;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #64748B;
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #CBD5E1;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: #1E293B;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 15% auto;
+            padding: 32px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            border: 1px solid #E2E8F0;
+        }
+
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-header h3 {
+            color: #1E293B;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+        }
+
+        .modal-header p {
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .btn-confirm {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm.promote {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-confirm.promote:hover {
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-cancel {
+            background: #F1F5F9;
+            color: #64748B;
+            border: 1px solid #E2E8F0;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #E2E8F0;
+            color: #475569;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 40px 0 30px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-info h1 {
+                font-size: 2rem;
+            }
+
+            .header-stats {
+                gap: 20px;
+            }
+
+            .action-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-tabs {
+                justify-content: center;
+            }
+
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                max-width: 100%;
+            }
+
+            .user-details {
+                grid-template-columns: 1fr;
+            }
+
+            .card-footer-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Page Header -->
+<section class="page-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="header-info">
+                <h1>Gérer Utilisateurs</h1>
+                <p>Administration et modération des comptes utilisateurs</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalUsers">{{ users.count }}</span>
+                    <span class="stat-label">Utilisateurs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalModerateurs">{{ total_moderators }}</span>
+                    <span class="stat-label">Modérateurs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalAdmins">{{ total_admins }}</span>
+                    <span class="stat-label">Admins</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Action Bar -->
+<section class="action-bar">
+    <div class="container">
+        <div class="action-content">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterUsers(this, 'all')">Tous ({{ users.count }})</button>
+                <button class="filter-tab" onclick="filterUsers(this, 'utilisateur')">Utilisateurs</button>
+                <button class="filter-tab" onclick="filterUsers(this, 'moderateur')">Modérateurs</button>
+                <button class="filter-tab" onclick="filterUsers(this, 'admin')">Admins</button>
+            </div>
+
+            <div class="search-bar">
+                <input type="text" class="search-input" id="searchInput" placeholder="Rechercher un utilisateur..." oninput="searchUsers()">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Users Grid -->
+<div class="container">
+    <div class="users-grid" id="usersGrid">
+        {% for user in users %}
+        <div class="user-card user-{{ user.role|default:'utilisateur' }}" 
+             data-role="{{ user.role|default:'utilisateur' }}" 
+             data-id="{{ user.id }}" 
+             data-name="{{ user.first_name|default:user.username }} {{ user.last_name }}" 
+             data-email="{{ user.email }}">
+            <div class="user-header">
+                <div class="status-badge status-{{ user.role|default:'utilisateur' }}">
+                    {% if user.is_superuser %}
+                        <i class="fas fa-crown"></i> Admin
+                    {% elif user.role == "moderateur" %}
+                        <i class="fas fa-shield-alt"></i> Modérateur
+                    {% else %}
+                        <i class="fas fa-user"></i> Utilisateur
+                    {% endif %}
+                </div>
+                <div class="user-avatar">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}">
+                    {% else %}
+                        {{ user.first_name.0|default:user.username.0|upper }}{{ user.last_name.0|upper }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="user-body">
+                <h3 class="user-name">{{ user.first_name }} {{ user.last_name }}</h3>
+                <div class="user-email">{{ user.email }}</div>
+            </div>
+
+            <div class="card-footer-actions">
+                {% if not user.is_superuser %}
+                    {% if user.role == "moderateur" %}
+                        <button class="card-action-btn demote-btn" 
+                                onclick="showRoleModal('{{ user.first_name|default:user.username }} {{ user.last_name }}', {{ user.id }}, 'demote')">
+                            <i class="fas fa-arrow-down"></i> Rétrograder
+                        </button>
+                    {% else %}
+                        <button class="card-action-btn promote-btn" 
+                                onclick="showRoleModal('{{ user.first_name|default:user.username }} {{ user.last_name }}', {{ user.id }}, 'promote')">
+                            <i class="fas fa-arrow-up"></i> Promouvoir
+                        </button>
+                    {% endif %}
+                    <button class="card-action-btn delete-btn" 
+                            onclick="showDeleteModal('{{ user.first_name|default:user.username }} {{ user.last_name }}', {{ user.id }})">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </button>
+                {% else %}
+                    <button class="card-action-btn" disabled>
+                        <i class="fas fa-lock"></i> Admin protégé
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-users"></i>
+            <h3>Aucun utilisateur trouvé</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modals -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>⚠️ Confirmer la suppression</h3>
+        <strong id="userNameDelete"></strong>
+        <div class="modal-actions">
+            <button class="btn-confirm" onclick="deleteUser()">Supprimer</button>
+            <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<div id="roleModal" class="modal">
+    <div class="modal-content">
+        <h3 id="roleModalTitle">Changer le rôle</h3>
+        <strong id="userNameRole"></strong>
+        <div class="modal-actions">
+            <button class="btn-confirm" id="roleConfirmBtn" onclick="changeUserRole()">Confirmer</button>
+            <button class="btn-cancel" onclick="closeModal()">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentAction = null;
+
+// ---------------- Modals ----------------
+function showDeleteModal(name, id) {
+    currentAction = {type: 'delete', userName: name, userId: id};
+    document.getElementById('userNameDelete').textContent = `"${name}"`;
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function showRoleModal(name, id, action) {
+    currentAction = {type: action, userName: name, userId: id};
+    document.getElementById('userNameRole').textContent = `"${name}"`;
+
+    const title = document.getElementById('roleModalTitle');
+    const btn = document.getElementById('roleConfirmBtn');
+
+    if (action === 'promote') {
+        title.textContent = '🎖️ Promouvoir en modérateur';
+        btn.textContent = 'Promouvoir';
+    } else {
+        title.textContent = '⬇️ Rétrograder en utilisateur';
+        btn.textContent = 'Rétrograder';
+    }
+
+    document.getElementById('roleModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    document.getElementById('roleModal').style.display = 'none';
+    currentAction = null;
+}
+
+// ---------------- CSRF ----------------
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(c => {
+            const cookie = c.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.split('=')[1]);
+            }
+        });
+    }
+    return cookieValue;
+}
+
+// ---------------- Notifications ----------------
+function showNotification(message, type) {
+    const n = document.createElement('div');
+    n.textContent = message;
+    n.style.position = 'fixed';
+    n.style.bottom = '20px';
+    n.style.right = '20px';
+    n.style.padding = '15px 25px';
+    n.style.borderRadius = '8px';
+    n.style.color = '#fff';
+    n.style.fontWeight = '600';
+    n.style.zIndex = 1001;
+    n.style.opacity = 0;
+    n.style.transition = 'opacity 0.5s ease';
+    n.style.background = type === 'success' ? 'green' : type === 'error' ? 'red' : 'gray';
+    document.body.appendChild(n);
+    setTimeout(() => n.style.opacity = 1, 100);
+    setTimeout(() => { n.style.opacity = 0; setTimeout(() => n.remove(), 500); }, 3000);
+}
+
+// ---------------- AJAX Actions ----------------
+function deleteUser() {
+    if (!currentAction || currentAction.type !== 'delete') return;
+
+    const {userId, userName} = currentAction;
+    const card = document.querySelector(`.user-card[data-id="${userId}"]`);
+    if (card.getAttribute('data-role') === 'admin') {
+        showNotification(`Impossible de supprimer un admin !`, 'error');
+        closeModal();
+        return;
+    }
+
+    fetch(`/admindash/supprimer-utilisateur/${userId}/`, {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')}
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            card?.remove();
+            closeModal();
+            showNotification(`Utilisateur "${userName}" supprimé !`, 'success');
+            updateStats();
+        } else {
+            showNotification(data.message, 'error');
+        }
+    });
+}
+
+function changeUserRole() {
+    if (!currentAction || !['promote','demote'].includes(currentAction.type)) return;
+
+    const {userId, type, userName} = currentAction;
+    const card = document.querySelector(`.user-card[data-id="${userId}"]`);
+    if (card.getAttribute('data-role') === 'admin') {
+        showNotification(`Impossible de modifier le rôle d'un admin !`, 'error');
+        closeModal();
+        return;
+    }
+
+    fetch(`/admindash/changer-role-utilisateur/${userId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({action: type})
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            updateUserCard(userId, type, userName);
+            closeModal();
+            showNotification(`Rôle de "${userName}" mis à jour !`, 'success');
+        } else {
+            showNotification(data.message, 'error');
+        }
+    });
+}
+
+// ---------------- Update User Card ----------------
+function updateUserCard(userId, action, userName) {
+    const card = document.querySelector(`.user-card[data-id="${userId}"]`);
+    if (!card) return;
+
+    const statusBadge = card.querySelector('.status-badge');
+    const footer = card.querySelector('.card-footer-actions');
+
+    const isAdmin = card.getAttribute('data-role') === 'admin';
+    if (isAdmin) return; // ne touche pas aux admins
+
+    if (action === 'promote') {
+        card.className = 'user-card user-moderateur';
+        card.setAttribute('data-role', 'moderateur');
+        statusBadge.className = 'status-badge status-moderateur';
+        statusBadge.innerHTML = '<i class="fas fa-shield-alt"></i> Modérateur';
+        footer.innerHTML = `
+            <button class="card-action-btn demote-btn" onclick="showRoleModal('${userName}', ${userId}, 'demote')">
+                <i class="fas fa-arrow-down"></i> Rétrograder
+            </button>
+            <button class="card-action-btn delete-btn" onclick="showDeleteModal('${userName}', ${userId})">
+                <i class="fas fa-trash"></i> Supprimer
+            </button>
+        `;
+    } else { // demote
+        card.className = 'user-card user-utilisateur';
+        card.setAttribute('data-role', 'utilisateur');
+        statusBadge.className = 'status-badge status-utilisateur';
+        statusBadge.innerHTML = '<i class="fas fa-user"></i> Utilisateur';
+        footer.innerHTML = `
+            <button class="card-action-btn promote-btn" onclick="showRoleModal('${userName}', ${userId}, 'promote')">
+                <i class="fas fa-arrow-up"></i> Promouvoir
+            </button>
+            <button class="card-action-btn delete-btn" onclick="showDeleteModal('${userName}', ${userId})">
+                <i class="fas fa-trash"></i> Supprimer
+            </button>
+        `;
+    }
+    updateStats();
+}
+
+// ---------------- Update Stats ----------------
+function updateStats() {
+    const users = document.querySelectorAll('.user-card');
+    let total = users.length, mods = 0, admins = 0;
+
+    users.forEach(u => {
+        const role = u.getAttribute('data-role');
+        if (role === 'moderateur') mods++;
+        if (role === 'admin') admins++;
+    });
+
+    document.getElementById('totalUsers').textContent = total;
+    document.getElementById('totalModerateurs').textContent = mods;
+    document.getElementById('totalAdmins').textContent = admins;
+}
+
+// ---------------- Search & Filter ----------------
+function searchUsers() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('.user-card').forEach(card => {
+        const name = card.getAttribute('data-name').toLowerCase();
+        card.style.display = name.includes(query) ? 'block' : 'none';
+    });
+}
+
+function filterUsers(btn, role) {
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.user-card').forEach(card => {
+        card.style.display = (role === 'all' || card.getAttribute('data-role') === role) ? 'block' : 'none';
+    });
+}
+
+// ---------------- Close modals on outside click ----------------
+document.addEventListener('click', e => {
+    if (e.target.classList.contains('modal')) closeModal();
+});
+
+</script>
+
+</body>
+{% endblock %}

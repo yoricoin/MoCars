@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="max-width:600px;margin:2rem auto;padding:1rem;border:1px solid #ddd;border-radius:8px;">
+    <h2>🔍 Test d'envoi d'email</h2>
+    <p>Entre ton adresse email pour vérifier si la configuration SMTP fonctionne :</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="email" name="email" placeholder="exemple@email.com"
+               required style="width:100%;padding:0.5rem;margin-bottom:1rem;">
+        <button type="submit" style="padding:0.5rem 1rem;background:#0F2C59;color:white;border:none;border-radius:6px;">
+            Envoyer un email de test
+        </button>
+    </form>
+</div>
+{% endblock %}
