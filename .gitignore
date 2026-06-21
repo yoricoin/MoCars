@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database (Never commit database files to Git)
+projet/db.sqlite3
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+
+# Media / Uploaded files
+projet/media/
+projet/static_root/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
